@@ -15,23 +15,26 @@ struct WeatherDailyForecastView: View {
 
         
         VStack(alignment: .leading) {
-            Text("Today")
+            Text("8 days forecast")
                 .onAppear() {
                     viewModel.bindWeatherData()
-                    print("ОНО ТУТА \(viewModel.degrees)")
                 }
                 .font(.title)
-            
-            DailyForecast(date: viewModel.date, degrees: viewModel.degrees, weatherType: viewModel.weatherType, columns: viewModel.weatherType.count) { date, temp, weath, col  in
-                VStack {
-                    Text(date[col])
-                    Image(weath[col].main)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 50, height: 50, alignment: .center)
-                    Text("\(temp[col].day)°")
+            if viewModel.date != [] {
+                ScrollView(.horizontal) {
+                    DailyForecast(date: viewModel.date, degrees: viewModel.degrees, weatherType: viewModel.weatherType, windSpeed: viewModel.windSpeed, columns: viewModel.weatherType.count) { date, temp, weather, wind, col  in
+                        VStack {
+                            Text(date[col])
+                            Image(weather[col].main)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 50, height: 50, alignment: .center)
+                            Text("\(String(format: "%.1f",viewModel.degrees[col].day))°")
+                            Text("\(String(format: "%.1f", wind[col]))m/s")
+                        }
+                        .padding(.trailing)
+                    }
                 }
-                Spacer()
             }
         }
         .padding()

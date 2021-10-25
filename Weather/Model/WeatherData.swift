@@ -11,8 +11,7 @@ extension Double {
     func getDateFromUTC(timeZone: TimeZone) -> String {
         let date = Date(timeIntervalSince1970: self)
         let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = DateFormatter.Style.medium
-        dateFormatter.timeZone = timeZone
+        dateFormatter.setLocalizedDateFormatFromTemplate("MMMd")
         let localDate = dateFormatter.string(from: date)
         return localDate
     }
@@ -92,7 +91,7 @@ struct WeatherData: Codable {
 
 class Api {
     func getData(completion: @escaping (WeatherData) -> ()) {
-        guard let url = URL(string: "https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&exclude=hourly,minutely&units=metric&appid=a0c0a6cb62d01e7faf2d0aa659b1b981") else {
+        guard let url = URL(string: "https://api.openweathermap.org/data/2.5/onecall?lat=53.17&lon=63.60&exclude=hourly,minutely&units=metric&appid=a0c0a6cb62d01e7faf2d0aa659b1b981") else {
             print("Wrong URL")
             return }
         
