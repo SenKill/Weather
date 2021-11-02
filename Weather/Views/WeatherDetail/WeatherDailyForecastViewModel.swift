@@ -14,10 +14,19 @@ final class WeatherDailyForecastViewModel: ObservableObject {
     @Published var weatherType: [WeatherDescription] = []
     @Published var windSpeed: [Float] = []
     
+    @Published var ctemperature: String?
+    @Published var cweather: String?
+    @Published var cwindSpeed: Float?
+    
     func bindWeatherData() {
-        Api().getData { (data) in
-            let timeZone = TimeZone(identifier: data.timezone)
+        Api().getData() { (data) in
+            self.ctemperature = String(format: "%.0f", data.current.temp)
+            self.ctemperature?.append("ºC")
+            self.cweather = data.current.weather[0].main
+            self.cwindSpeed = data.current.wind_speed
             
+            
+            let timeZone = TimeZone(identifier: data.timezone)
             for i in 0..<data.daily.count {
                 self.date.append(Double(data.daily[i].dt).getDateFromUTC(timeZone: timeZone!))
                 self.degrees.append(data.daily[i].temp)
@@ -25,6 +34,26 @@ final class WeatherDailyForecastViewModel: ObservableObject {
                 self.windSpeed.append(data.daily[i].wind_speed)
             }
         }
+    }
+    
+    
+    func setGradient(weather: String) -> LinearGradient? {
+        var colors: [Color]
+        switch weather {
+        case "Clear":
+            colors = [.white, .orange]
+            break;
+        case "Clouds":
+            colors = [.white, .blue]
+            break;
+        case "Rain":
+            colors = [.gray, .blue]
+            break;
+        default:
+            print("ERROR: Wrong weather was inputed!")
+            return nil
+        }
+        return LinearGradient(gradient: Gradient(colors: colors), startPoint: .topTrailing, endPoint: .bottom)
     }
 }
 

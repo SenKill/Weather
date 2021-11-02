@@ -146,7 +146,7 @@
 			isa = PBXGroup;
 			children = (
 				F7257EA627081F7D005C5076 /* WeatherDetailView.swift */,
-				F77EA9452712C606000B8883 /* WeatherDetailViewModel.swift */,
+				F77EA9402712C5F2000B8883 /* WeatherDailyForecastViewModel.swift */,
 			);
 			path = WeatherDetail;
 			sourceTree = "<group>";
@@ -155,7 +155,7 @@
 			isa = PBXGroup;
 			children = (
 				F795626B27118D6E006D1A98 /* WeatherDailyForecastView.swift */,
-				F77EA9402712C5F2000B8883 /* WeatherDailyForecastViewModel.swift */,
+				F77EA9452712C606000B8883 /* WeatherDetailViewModel.swift */,
 			);
 			path = WeatherHourlyForecast;
 			sourceTree = "<group>";

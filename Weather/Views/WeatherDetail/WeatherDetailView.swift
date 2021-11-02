@@ -10,30 +10,27 @@ import SwiftUI
 
 
 struct WeatherDetailView: View {
-    // Remove these and get data from the API
-    @State var currentWeather = "Clear"
-    @State var currentTemperature = 10
-    @State var location = "Kostanay, Kazakhstan"
     
-    @StateObject private var viewModel = WeatherDetailViewModel()
+    @ObservedObject private var viewModel = WeatherDailyForecastViewModel()
     
     var body: some View {
-        
         VStack {
             ZStack {
-                viewModel.setGradient(weather: currentWeather)
-                    .ignoresSafeArea()
-                VStack() {
-                    // These things also need to connect into the API and get data through the ViewModel
-                    Text(currentWeather)
+                viewModel.setGradient(weather: viewModel.cweather ?? "Clear")
+                   .ignoresSafeArea()
+                VStack {
+                    Text(viewModel.cweather ?? "Clear")
                         .font(.system(size: 30,
                                       weight: .bold,
                                       design: .default)
                         )
-                    Text(location)
+                    Text("Kostanay, Kazakhstan") // Need location data and convert it coordinates to a city and a country name
                         .padding(.bottom, 10)
                         .padding(.top, 5)
-                    Text("\(currentTemperature)º")
+                        .onAppear() {
+                            viewModel.bindWeatherData()
+                        }
+                    Text(viewModel.ctemperature ?? "10ºC")
                         .fontWeight(.heavy)
                         .font(.system(size: 60,
                                       weight: .heavy,
@@ -42,7 +39,30 @@ struct WeatherDetailView: View {
                     Spacer()
                 }
             }
-            WeatherDailyForecastView()
+            VStack(alignment: .leading) {
+                Text("8 days forecast")
+                    .onAppear() {
+                        viewModel.bindWeatherData()
+                    }
+                    .font(.title)
+                if viewModel.date != [] {
+                    ScrollView(.horizontal) {
+                        DailyForecast(date: viewModel.date, degrees: viewModel.degrees, weatherType: viewModel.weatherType, windSpeed: viewModel.windSpeed, columns: viewModel.weatherType.count) { date, temp, weather, wind, col  in
+                            VStack {
+                                Text(date[col])
+                                Image(weather[col].main)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 50, height: 50, alignment: .center)
+                                Text("\(String(format: "%.1f",viewModel.degrees[col].day))°")
+                                Text("\(String(format: "%.1f", wind[col]))m/s")
+                            }
+                            .padding(.trailing)
+                        }
+                    }
+                }
+            }
+            .padding()
         }
     }
 }
