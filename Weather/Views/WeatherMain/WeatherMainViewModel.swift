@@ -1,5 +1,5 @@
 //
-//  WeatherDailyForecastViewModel.swift
+//  WeatherMainViewModel.swift
 //  Weather
 //
 //  Created by Serik Musaev on 10/10/21.
@@ -8,22 +8,22 @@
 import Foundation
 import SwiftUI
 
-final class WeatherDailyForecastViewModel: ObservableObject {
+final class WeatherMainViewModel: ObservableObject {
     @Published var date: [String] = []
     @Published var degrees: [Temperature] = []
     @Published var weatherType: [WeatherDescription] = []
     @Published var windSpeed: [Float] = []
     
-    @Published var ctemperature: String?
-    @Published var cweather: String?
-    @Published var cwindSpeed: Float?
+    @Published var cTemperature: String?
+    @Published var cWeather: String?
+    @Published var cWindSpeed: Float?
     
     func bindWeatherData() {
         Api().getData() { (data) in
-            self.ctemperature = String(format: "%.0f", data.current.temp)
-            self.ctemperature?.append("ºC")
-            self.cweather = data.current.weather[0].main
-            self.cwindSpeed = data.current.wind_speed
+            self.cTemperature = String(format: "%.0f", data.current.temp)
+            self.cTemperature?.append("ºC")
+            self.cWeather = data.current.weather[0].main
+            self.cWindSpeed = data.current.wind_speed
             
             
             let timeZone = TimeZone(identifier: data.timezone)
@@ -35,7 +35,6 @@ final class WeatherDailyForecastViewModel: ObservableObject {
             }
         }
     }
-    
     
     func setGradient(weather: String) -> LinearGradient? {
         var colors: [Color]

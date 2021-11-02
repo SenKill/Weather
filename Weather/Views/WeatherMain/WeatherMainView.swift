@@ -1,5 +1,5 @@
 //
-//  WeatherDetailView.swift
+//  WeatherMainView.swift
 //  Weather
 //
 //  Created by Serik Musaev on 10/2/21.
@@ -9,17 +9,17 @@ import SwiftUI
 
 
 
-struct WeatherDetailView: View {
+struct WeatherMainView: View {
     
-    @ObservedObject private var viewModel = WeatherDailyForecastViewModel()
+    @ObservedObject private var viewModel = WeatherMainViewModel()
     
     var body: some View {
         VStack {
             ZStack {
-                viewModel.setGradient(weather: viewModel.cweather ?? "Clear")
+                viewModel.setGradient(weather: viewModel.cWeather ?? "Clear")
                    .ignoresSafeArea()
                 VStack {
-                    Text(viewModel.cweather ?? "Clear")
+                    Text(viewModel.cWeather ?? "Clear")
                         .font(.system(size: 30,
                                       weight: .bold,
                                       design: .default)
@@ -30,7 +30,7 @@ struct WeatherDetailView: View {
                         .onAppear() {
                             viewModel.bindWeatherData()
                         }
-                    Text(viewModel.ctemperature ?? "10ºC")
+                    Text(viewModel.cTemperature ?? "10ºC")
                         .fontWeight(.heavy)
                         .font(.system(size: 60,
                                       weight: .heavy,
@@ -41,9 +41,6 @@ struct WeatherDetailView: View {
             }
             VStack(alignment: .leading) {
                 Text("8 days forecast")
-                    .onAppear() {
-                        viewModel.bindWeatherData()
-                    }
                     .font(.title)
                 if viewModel.date != [] {
                     ScrollView(.horizontal) {
@@ -69,6 +66,6 @@ struct WeatherDetailView: View {
 
 struct WeatherDetail_Previews: PreviewProvider {
     static var previews: some View {
-        WeatherDetailView()
+        WeatherMainView()
     }
 }
