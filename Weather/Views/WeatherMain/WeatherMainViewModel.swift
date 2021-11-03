@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import CoreLocation
 
 final class WeatherMainViewModel: ObservableObject {
     @Published var date: [String] = []
@@ -14,6 +15,10 @@ final class WeatherMainViewModel: ObservableObject {
     @Published var weatherType: [WeatherDescription] = []
     @Published var windSpeed: [Float] = []
     
+    private var lat: CLLocationDegrees?
+    private var lon: CLLocationDegrees?
+    
+    @Published var cityName: String?
     @Published var cTemperature: String?
     @Published var cWeather: String?
     @Published var cWindSpeed: Float?
@@ -25,6 +30,7 @@ final class WeatherMainViewModel: ObservableObject {
             self.cWeather = data.current.weather[0].main
             self.cWindSpeed = data.current.wind_speed
             
+            self.getCityName(lat: CLLocationDegrees(data.lat), lon: CLLocationDegrees(data.lon))
             
             let timeZone = TimeZone(identifier: data.timezone)
             for i in 0..<data.daily.count {
@@ -32,6 +38,25 @@ final class WeatherMainViewModel: ObservableObject {
                 self.degrees.append(data.daily[i].temp)
                 self.weatherType.append(contentsOf: data.daily[i].weather)
                 self.windSpeed.append(data.daily[i].wind_speed)
+            }
+        }
+    }
+    
+    private func getCityName(lat: CLLocationDegrees, lon: CLLocationDegrees) {
+        let geocoder = CLGeocoder()
+        let location = CLLocation(latitude: lat, longitude: lon)
+        
+        geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
+            if let error = error {
+                print("Unable to Reverse Geocode Location (\(error))")
+            } else {
+                if let placemarks = placemarks, let placemark = placemarks.first {
+                    let city = placemark.locality ?? placemark.administrativeArea
+                    let country = placemark.country!
+                    self.cityName = "\(city ?? "(City not found)"), \(country)"
+                } else {
+                    self.cityName = "No Matching Addresses Found"
+                }
             }
         }
     }
@@ -56,6 +81,7 @@ final class WeatherMainViewModel: ObservableObject {
     }
 }
 
+// TODO: Delete this struct and optimize code
 struct DailyForecast<Content: View>: View {
     let date: [String]
     let degrees: [Temperature]

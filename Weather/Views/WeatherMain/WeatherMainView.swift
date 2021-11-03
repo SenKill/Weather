@@ -7,59 +7,68 @@
 
 import SwiftUI
 
+// TODO: Hourly forecast
 
+// TODO: City selector
+
+// TODO: Auto geolocation
 
 struct WeatherMainView: View {
     
     @ObservedObject private var viewModel = WeatherMainViewModel()
     
     var body: some View {
-        VStack {
-            ZStack {
-                viewModel.setGradient(weather: viewModel.cWeather ?? "Clear")
-                   .ignoresSafeArea()
-                VStack {
-                    Text(viewModel.cWeather ?? "Clear")
-                        .font(.system(size: 30,
-                                      weight: .bold,
-                                      design: .default)
-                        )
-                    Text("Kostanay, Kazakhstan") // Need location data and convert it coordinates to a city and a country name
-                        .padding(.bottom, 10)
-                        .padding(.top, 5)
-                        .onAppear() {
-                            viewModel.bindWeatherData()
-                        }
-                    Text(viewModel.cTemperature ?? "10ºC")
-                        .fontWeight(.heavy)
-                        .font(.system(size: 60,
-                                      weight: .heavy,
-                                      design: .default)
-                        )
-                    Spacer()
+        if viewModel.date == [] {
+            LoadingScreen()
+                .onAppear() {
+                    viewModel.bindWeatherData()
                 }
-            }
-            VStack(alignment: .leading) {
-                Text("8 days forecast")
-                    .font(.title)
-                if viewModel.date != [] {
-                    ScrollView(.horizontal) {
-                        DailyForecast(date: viewModel.date, degrees: viewModel.degrees, weatherType: viewModel.weatherType, windSpeed: viewModel.windSpeed, columns: viewModel.weatherType.count) { date, temp, weather, wind, col  in
-                            VStack {
-                                Text(date[col])
-                                Image(weather[col].main)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 50, height: 50, alignment: .center)
-                                Text("\(String(format: "%.1f",viewModel.degrees[col].day))°")
-                                Text("\(String(format: "%.1f", wind[col]))m/s")
+        } else {
+            VStack {
+                ZStack {
+                    viewModel.setGradient(weather: viewModel.cWeather!)
+                       .ignoresSafeArea()
+                    VStack {
+                        Text(viewModel.cWeather!)
+                            .font(.system(size: 30,
+                                          weight: .bold,
+                                          design: .default)
+                            )
+                        Text(viewModel.cityName ?? "nil") // TODO: User can change his city
+                            .padding(.bottom, 10)
+                            .padding(.top, 5)
+                            
+                        Text(viewModel.cTemperature!)
+                            .fontWeight(.heavy)
+                            .font(.system(size: 60,
+                                          weight: .heavy,
+                                          design: .default)
+                            )
+                        Spacer()
+                    }
+                }
+                VStack(alignment: .leading) {
+                    Text("8 days forecast")
+                        .font(.title)
+                    if viewModel.date != [] {
+                        ScrollView(.horizontal) {
+                            DailyForecast(date: viewModel.date, degrees: viewModel.degrees, weatherType: viewModel.weatherType, windSpeed: viewModel.windSpeed, columns: viewModel.weatherType.count) { date, temp, weather, wind, col  in
+                                VStack {
+                                    Text(date[col])
+                                    Image(weather[col].main)
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 50, height: 50, alignment: .center)
+                                    Text("\(String(format: "%.1f",viewModel.degrees[col].day))°")
+                                    Text("\(String(format: "%.1f", wind[col]))m/s")
+                                }
+                                .padding(.trailing)
                             }
-                            .padding(.trailing)
                         }
                     }
                 }
+                .padding()
             }
-            .padding()
         }
     }
 }
