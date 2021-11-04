@@ -80,31 +80,3 @@ final class WeatherMainViewModel: ObservableObject {
         return LinearGradient(gradient: Gradient(colors: colors), startPoint: .topTrailing, endPoint: .bottom)
     }
 }
-
-// TODO: Delete this struct and optimize code
-struct DailyForecast<Content: View>: View {
-    let date: [String]
-    let degrees: [Temperature]
-    let weatherType: [WeatherDescription]
-    let windSpeed: [Float]
-    let columns: Int
-    let content: ([String], [Temperature], [WeatherDescription], [Float], Int) -> Content
-    
-    var body: some View {
-        HStack {
-            ForEach(0 ..< self.columns) { column in
-                self.content(date, degrees, weatherType, windSpeed, column)
-                    .font(.system(size: 20, weight: .semibold, design: .default))
-            }
-        }
-    }
-    
-    init(date: [String], degrees: [Temperature], weatherType: [WeatherDescription], windSpeed: [Float], columns: Int, @ViewBuilder content: @escaping ([String], [Temperature], [WeatherDescription], [Float], Int) -> Content) {
-        self.date = date
-        self.degrees = degrees
-        self.weatherType = weatherType
-        self.columns = columns
-        self.windSpeed = windSpeed
-        self.content = content
-    }
-}

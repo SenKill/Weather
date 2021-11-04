@@ -52,17 +52,23 @@ struct WeatherMainView: View {
                         .font(.title)
                     if viewModel.date != [] {
                         ScrollView(.horizontal) {
-                            DailyForecast(date: viewModel.date, degrees: viewModel.degrees, weatherType: viewModel.weatherType, windSpeed: viewModel.windSpeed, columns: viewModel.weatherType.count) { date, temp, weather, wind, col  in
-                                VStack {
-                                    Text(date[col])
-                                    Image(weather[col].main)
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 50, height: 50, alignment: .center)
-                                    Text("\(String(format: "%.1f",viewModel.degrees[col].day))°")
-                                    Text("\(String(format: "%.1f", wind[col]))m/s")
+                            HStack {
+                                ForEach(0 ..< viewModel.weatherType.count) { col in
+                                    VStack {
+                                        Text(viewModel.date[col])
+                                        Image(viewModel.weatherType[col].main)
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 65, height: 65, alignment: .center)
+                                        HStack {
+                                            Text("\(String(format: "%.1f",viewModel.degrees[col].day))°")
+                                            Text("\(String(format: "%.1f",viewModel.degrees[col].night))°")
+                                        }
+                                        Text("\(String(format: "%.1f", viewModel.windSpeed[col]))m/s")
+                                    }
+                                    .padding(.trailing)
                                 }
-                                .padding(.trailing)
+                                .font(.system(size: 20, weight: .semibold, design: .default))
                             }
                         }
                     }
