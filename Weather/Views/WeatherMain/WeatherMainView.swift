@@ -18,11 +18,23 @@ struct WeatherMainView: View {
     @ObservedObject private var viewModel = WeatherMainViewModel()
     
     var body: some View {
-        if viewModel.date == [] {
+        // TODO: Fix this
+        if viewModel.lat == nil || viewModel.lat == 0.0 || viewModel.cityName == nil {
             LoadingScreen()
                 .onAppear() {
-                    viewModel.bindWeatherData()
+                    print("prek")
+                    viewModel.getCoordinates()
+                    if viewModel.lat != 0.0 {
+                        viewModel.bindWeatherData()
+                    }
                 }
+            Button("Получить координаты") {
+                viewModel.getCoordinates()
+                viewModel.bindWeatherData()
+            }
+            if viewModel.lat != nil {
+                Text(String(viewModel.lat!))
+            }
         } else {
             VStack {
                 ZStack {
@@ -34,7 +46,7 @@ struct WeatherMainView: View {
                                           weight: .bold,
                                           design: .default)
                             )
-                        Text(viewModel.cityName ?? "nil") // TODO: User can change his city
+                        Text(viewModel.cityName!) // TODO: User can change his city
                             .padding(.bottom, 10)
                             .padding(.top, 5)
                             
