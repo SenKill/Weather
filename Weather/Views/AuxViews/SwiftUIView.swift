@@ -6,24 +6,38 @@
 //
 
 import SwiftUI
-
 import Foundation
+import CoreLocation
 
-class LocationManagerr: NSObject, ObservableObject {
-  @Published var someVar: Int = 0
+class ViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
+    private let locationManager = CLLocationManager()
+    @Published var coordinates: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
+    
+    override init() {
+        super.init()
+        locationManager.delegate = self
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let latestLocation = locations.first else {
+            // error
+            return
+        }
+        
+        DispatchQueue.main.async {
+            self.coordinates = latestLocation.coordinate
+        }
+    }
 }
 
 struct SwiftUIView: View {
-    @ObservedObject var lm = LocationManagerr()
-
-    var someVar: String  { return("\(lm.someVar ?? 0)") }
+    @StateObject var viewModel = ViewModel()
+    @State var coordinates: Double = 0.0
 
     var body: some View {
-        VStack {
-            Text("someVar: \(self.someVar)")
-            Button(action: { self.lm.someVar = self.lm.someVar + 2 }) {
-              Text("Add more")
-            }
+        Text("\(coordinates)")
+            .onAppear() {
+                self.coordinates = viewModel.coordinates.latitude
         }
     }
 }

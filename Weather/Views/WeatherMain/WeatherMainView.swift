@@ -16,25 +16,21 @@ import SwiftUI
 struct WeatherMainView: View {
     
     @ObservedObject private var viewModel = WeatherMainViewModel()
+    @State private var coordIsLoaded = false
     
     var body: some View {
         // TODO: Fix this
-        if viewModel.lat == nil || viewModel.lat == 0.0 || viewModel.cityName == nil {
+
+        
+        if viewModel.lat == 0.0 || viewModel.lon == nil {
+            Button("Tap here to load data") {
+                viewModel.getCoordinates()
+            }
+        } else if viewModel.cityName == nil {
             LoadingScreen()
                 .onAppear() {
-                    print("prek")
-                    viewModel.getCoordinates()
-                    if viewModel.lat != 0.0 {
-                        viewModel.bindWeatherData()
-                    }
+                    viewModel.bindWeatherData()
                 }
-            Button("Получить координаты") {
-                viewModel.getCoordinates()
-                viewModel.bindWeatherData()
-            }
-            if viewModel.lat != nil {
-                Text(String(viewModel.lat!))
-            }
         } else {
             VStack {
                 ZStack {
@@ -46,7 +42,7 @@ struct WeatherMainView: View {
                                           weight: .bold,
                                           design: .default)
                             )
-                        Text(viewModel.cityName!) // TODO: User can change his city
+                        Text(viewModel.cityName!) // TODO: User can change city
                             .padding(.bottom, 10)
                             .padding(.top, 5)
                             

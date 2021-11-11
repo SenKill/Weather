@@ -26,23 +26,20 @@ final class WeatherMainViewModel: ObservableObject {
     @ObservedObject private var locationManager = LocationManager()
     
     func bindWeatherData() {
-        getCoordinates()
-        if self.lat != Optional(0.0) {
-            Api().getData(latitude: String(self.lat!), longtitude: String(self.lon!)) { (data) in
-                self.cTemperature = String(format: "%.0f", data.current.temp)
-                self.cTemperature?.append("ºC")
-                self.cWeather = data.current.weather[0].main
-                self.cWindSpeed = data.current.wind_speed
-                
-                self.getCityName(lat: self.lat!, lon: self.lon!)
-                
-                let timeZone = TimeZone(identifier: data.timezone)
-                for i in 0..<data.daily.count {
-                    self.date.append(Double(data.daily[i].dt).getDateFromUTC(timeZone: timeZone!))
-                    self.degrees.append(data.daily[i].temp)
-                    self.weatherType.append(contentsOf: data.daily[i].weather)
-                    self.windSpeed.append(data.daily[i].wind_speed)
-                }
+        Api().getData(latitude: String(self.lat!), longtitude: String(self.lon!)) { (data) in
+            self.cTemperature = String(format: "%.0f", data.current.temp)
+            self.cTemperature?.append("ºC")
+            self.cWeather = data.current.weather[0].main
+            self.cWindSpeed = data.current.wind_speed
+                    
+            self.getCityName(lat: self.lat!, lon: self.lon!)
+                    
+            let timeZone = TimeZone(identifier: data.timezone)
+            for i in 0..<data.daily.count {
+                self.date.append(Double(data.daily[i].dt).getDateFromUTC(timeZone: timeZone!))
+                self.degrees.append(data.daily[i].temp)
+                self.weatherType.append(contentsOf: data.daily[i].weather)
+                self.windSpeed.append(data.daily[i].wind_speed)
             }
         }
     }
@@ -56,8 +53,6 @@ final class WeatherMainViewModel: ObservableObject {
     private func getCityName(lat: Double, lon: Double) {
         let geocoder = CLGeocoder()
         let location = CLLocation(latitude: lat, longitude: lon)
-        
-        print(lat)
         
         geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
             if let error = error {
