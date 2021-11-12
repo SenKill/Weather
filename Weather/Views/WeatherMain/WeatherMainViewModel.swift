@@ -45,9 +45,11 @@ final class WeatherMainViewModel: ObservableObject {
     }
     
     func getCoordinates() {
-        let coordinate = self.locationManager.location != nil ? self.locationManager.location!.coordinate: CLLocationCoordinate2D()
-        self.lat = coordinate.latitude
-        self.lon = coordinate.longitude
+        DispatchQueue.main.async {
+            let coordinate = self.locationManager.location != nil ? self.locationManager.location!.coordinate: CLLocationCoordinate2D()
+            self.lat = coordinate.latitude
+            self.lon = coordinate.longitude
+        }
     }
     
     private func getCityName(lat: Double, lon: Double) {

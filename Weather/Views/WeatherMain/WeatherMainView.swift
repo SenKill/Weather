@@ -11,26 +11,18 @@ import SwiftUI
 
 // TODO: City selector
 
-// TODO: Auto geolocation
-
 struct WeatherMainView: View {
     
     @ObservedObject private var viewModel = WeatherMainViewModel()
     @State private var coordIsLoaded = false
     
     var body: some View {
-        // TODO: Fix this
-
-        
         if viewModel.lat == 0.0 || viewModel.lon == nil {
-            Button("Tap here to load data") {
-                viewModel.getCoordinates()
-            }
+            LoadingScreen()
+                .onAppear(perform: viewModel.getCoordinates)
         } else if viewModel.cityName == nil {
             LoadingScreen()
-                .onAppear() {
-                    viewModel.bindWeatherData()
-                }
+                .onAppear(perform: viewModel.bindWeatherData)
         } else {
             VStack {
                 ZStack {
