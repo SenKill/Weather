@@ -21,13 +21,23 @@ struct WeatherMainView: View {
     
     @ObservedObject private var viewModel = WeatherMainViewModel()
     
+    // Replace theese with viewModel later
+    let hourlyWeather = ["Clear", "Clear", "Clear", "Clouds", "Clouds", "Snow"]
+    let hourlyTemperature = ["-5º", "-4º", "-2º", "-3º", "-4º", "-3º"]
+    let hourlyTime = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00"]
+    
+    let dailyDate = ["14.11", "15.11", "16.11", "17.11", "18.11"]
+    let dailyWeather = ["Clear", "Clouds", "Snow", "Snow", "Snow"]
+    let dailyTemperatureDay = ["3º", "1º", "-2º", "-5º", "-3º"]
+    let dailyTemperatureNight = ["0º", "-1º", "-4º", "-6º", "-8º"]
+    
     // TODO: Change fonts!
     var body: some View {
         ZStack {
             Color.init(r: 245, g: 245, b: 245)
                 .ignoresSafeArea()
             ZStack {
-                Image("Sunny")
+                Image("sunny")
                     .resizable()
                     .scaledToFit()
                     .blur(radius: 20)
@@ -61,7 +71,7 @@ struct WeatherMainView: View {
                             .frame(width: 3, height: 100, alignment: .center)
                         VStack(alignment: .leading) {
                             Group {
-                                Text("Sunny")
+                                Text("Clear")
                                 Text("H: -2º")
                                 Text("L: -7º")
                             }
@@ -97,14 +107,45 @@ struct WeatherMainView: View {
                     Spacer()
                 }
                 .padding(.top)
-                HStack {
-                    // TODO: Make scrolling view for hourly forecast
-                }
                 Spacer()
-                VStack {
-                    // TODO: Make scrolling for daily forecast
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(0 ..< hourlyWeather.count) { column in
+                            VStack(alignment: .center) {
+                                Text(hourlyTime[column])
+                                Image(hourlyWeather[column])
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 45, height: 45, alignment: .center)
+                                Text(hourlyTemperature[column])
+                            }
+                            .padding(10)
+                        }
+                    }
                 }
+                .padding()
+                Divider()
+                ScrollView(.vertical, showsIndicators: false) {
+                    ForEach(0 ..< dailyWeather.count) { column in
+                        HStack {
+                            Text(dailyDate[column])
+                            Spacer()
+                            Image(dailyWeather[column])
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 30, height: 30, alignment: .center)
+                            Spacer()
+                            HStack {
+                                Text(dailyTemperatureDay[column])
+                                Text(dailyTemperatureNight[column])
+                                    .foregroundColor(Color(r: 150, g: 150, b: 150))
+                            }
+                        }
+                    }
+                }
+                .padding([.leading, .trailing])
             }
+            
         }
         .foregroundColor(Color.init(r: 55, g: 55, b: 55))
     }
