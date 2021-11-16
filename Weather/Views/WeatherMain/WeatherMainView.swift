@@ -53,15 +53,14 @@ struct WeatherMainView: View {
                                 .fontWeight(.medium)
                                 
                         }
-                        .padding(.leading)
                         Spacer()
                         Button(action: viewModel.getCoordinates, label: { // TODO: Menu and it's call
                             Image(systemName: "list.dash")
                                 .resizable()
                                 .frame(width: 25, height: 20, alignment: .center)
                         })
-                        .padding()
                     }
+                    .padding()
                     HStack {
                         Text("-5º")
                             .font(.system(size: 80,
@@ -75,7 +74,7 @@ struct WeatherMainView: View {
                                 Text("H: -2º")
                                 Text("L: -7º")
                             }
-                            .font(.title2)
+                            .font(.system(size: 20, weight: .medium, design: .default))
                             .padding(2)
                         }
                         Spacer()
@@ -88,6 +87,7 @@ struct WeatherMainView: View {
                             Text("Wind")
                             Text("Humidity")
                             Text("Feels like")
+                            Text("Pressure")
                         }
                         .font(.title3)
                         .padding(0.5)
@@ -99,6 +99,7 @@ struct WeatherMainView: View {
                             Text("5 m/s")
                             Text("91%")
                             Text("27º")
+                            Text("1000 mbar")
                         }
                         .font(.title3)
                         .padding(0.5)
@@ -108,6 +109,7 @@ struct WeatherMainView: View {
                 }
                 .padding(.top)
                 Spacer()
+                Divider()
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(0 ..< hourlyWeather.count) { column in
@@ -123,23 +125,25 @@ struct WeatherMainView: View {
                         }
                     }
                 }
-                .padding()
+                .padding(.vertical)
                 Divider()
                 ScrollView(.vertical, showsIndicators: false) {
                     ForEach(0 ..< dailyWeather.count) { column in
-                        HStack {
-                            Text(dailyDate[column])
-                            Spacer()
+                        ZStack(alignment: .center) {
+                            HStack {
+                                // TODO: Convert date to days of the week
+                                Text(dailyDate[column])
+                                Spacer()
+                                HStack {
+                                    Text(dailyTemperatureDay[column])
+                                    Text(dailyTemperatureNight[column])
+                                        .foregroundColor(Color.init(r: 150, g: 150, b: 150))
+                                }
+                            }
                             Image(dailyWeather[column])
                                 .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 30, height: 30, alignment: .center)
-                            Spacer()
-                            HStack {
-                                Text(dailyTemperatureDay[column])
-                                Text(dailyTemperatureNight[column])
-                                    .foregroundColor(Color(r: 150, g: 150, b: 150))
-                            }
+                                .scaledToFit()
+                                .frame(width: 30, height: 30)
                         }
                     }
                 }
