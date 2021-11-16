@@ -9,12 +9,20 @@ import Foundation
 import CoreLocation
 
 extension Double {
-    func getDateFromUTC(timeZone: TimeZone) -> String {
+    func getDateDaily(timeZone: TimeZone) -> String {
         let date = Date(timeIntervalSince1970: self)
         let dateFormatter = DateFormatter()
         dateFormatter.setLocalizedDateFormatFromTemplate("MMMd")
         let localDate = dateFormatter.string(from: date)
         return localDate
+    }
+    
+    func getDateCurrent() {
+        // TODO: Convert dt from Model to Data and provide it into the ViewModel
+    }
+    
+    func getDateHourly() {
+        // TODO: Convert dt from Model to Data and provide it into the ViewModel
     }
 }
 
@@ -80,6 +88,23 @@ struct DailyWeather: Codable {
     let uvi: Float
 }
 
+struct HourlyWeather: Codable {
+    let dt: Int
+    let temp: Float
+    let feels_like: Float
+    let pressure: Int
+    let humidity: Int
+    let dew_point: Float
+    let uvi: Float
+    let clouds: Int
+    let visibility: Int
+    let wind_speed: Float
+    let wind_deg: Int
+    let wind_gust: Float
+    let weather: [WeatherDescription]
+    let pop: Float
+}
+
 struct WeatherData: Codable {
     var lat: Float
     var lon: Float
@@ -87,13 +112,14 @@ struct WeatherData: Codable {
     var timezone_offset: Int
     
     var current: CurrentWeather
+    var hourly: [HourlyWeather]
     var daily: [DailyWeather]
 }
 
 // TODO: Custom coordinates for api call
 class Api {
     func getData(latitude: String, longtitude: String ,completion: @escaping (WeatherData) -> ()) {
-        guard let url = URL(string: "https://api.openweathermap.org/data/2.5/onecall?lat=\(latitude)&lon=\(longtitude)&exclude=hourly,minutely&units=metric&appid=a0c0a6cb62d01e7faf2d0aa659b1b981") else {
+        guard let url = URL(string: "https://api.openweathermap.org/data/2.5/onecall?lat=\(latitude)&lon=\(longtitude)&exclude=minutely&units=metric&appid=a0c0a6cb62d01e7faf2d0aa659b1b981") else {
             print("Wrong URL")
             return }
         

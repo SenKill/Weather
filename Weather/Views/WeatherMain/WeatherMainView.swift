@@ -33,125 +33,133 @@ struct WeatherMainView: View {
     
     // TODO: Change fonts!
     var body: some View {
-        ZStack {
-            Color.init(r: 245, g: 245, b: 245)
-                .ignoresSafeArea()
+        if viewModel.lat == 0.0 || viewModel.lon == nil {
+         LoadingScreen()
+             .onAppear(perform: viewModel.getCoordinates)
+        } else if viewModel.cityName == nil {
+         LoadingScreen()
+             .onAppear(perform: viewModel.bindWeatherData)
+        } else {
             ZStack {
-                Image("sunny")
-                    .resizable()
-                    .scaledToFit()
-                    .blur(radius: 20)
-                    .offset(x: 200, y: -100)
-            }
-            VStack {
+                Color.init(r: 245, g: 245, b: 245)
+                    .ignoresSafeArea()
+                ZStack {
+                    Image("sunny") // Change this later to data from view model, and find images for an other weather
+                        .resizable()
+                        .scaledToFit()
+                        .blur(radius: 20)
+                        .offset(x: 200, y: -100)
+                }
                 VStack {
-                    HStack {
-                        VStack {
-                            Text("10:25 pm, Sat Nov 13")
-                            Text("Kostanay")
-                                .font(.title3)
-                                .fontWeight(.medium)
-                                
+                    VStack {
+                        HStack {
+                            VStack {
+                                Text("10:25 pm, Sat Nov 13") // Current date
+                                Text(viewModel.cityName!)
+                                    .font(.title3)
+                                    .fontWeight(.medium)
+                                    
+                            }
+                            Spacer()
+                            Button(action: viewModel.getCoordinates, label: { // TODO: Menu and it's call
+                                Image(systemName: "list.dash")
+                                    .resizable()
+                                    .frame(width: 25, height: 20, alignment: .center)
+                            })
                         }
-                        Spacer()
-                        Button(action: viewModel.getCoordinates, label: { // TODO: Menu and it's call
-                            Image(systemName: "list.dash")
-                                .resizable()
-                                .frame(width: 25, height: 20, alignment: .center)
-                        })
+                        .padding()
+                        HStack {
+                            Text(viewModel.currentTemperature!)
+                                .font(.system(size: 80,
+                                              weight: .semibold,
+                                              design: .default))
+                            Rectangle()
+                                .frame(width: 3, height: 100, alignment: .center)
+                            VStack(alignment: .leading) {
+                                Group {
+                                    Text(viewModel.currentWeather!)
+                                    Text("H: \(String(format: "%.0f" ,viewModel.dailyTemperature[0].max))º")
+                                    Text("L: \(String(format: "%.0f" ,viewModel.dailyTemperature[0].min))º")
+                                }
+                                .font(.system(size: 20, weight: .medium, design: .default))
+                                .padding(2)
+                            }
+                            Spacer()
+                        }
+                        .padding()
                     }
-                    .padding()
                     HStack {
-                        Text("-5º")
-                            .font(.system(size: 80,
-                                          weight: .semibold,
-                                          design: .default))
-                        Rectangle()
-                            .frame(width: 3, height: 100, alignment: .center)
                         VStack(alignment: .leading) {
                             Group {
-                                Text("Clear")
-                                Text("H: -2º")
-                                Text("L: -7º")
+                                Text("Wind")
+                                Text("Humidity")
+                                Text("Feels like")
+                                Text("Pressure")
                             }
-                            .font(.system(size: 20, weight: .medium, design: .default))
-                            .padding(2)
+                            .font(.title3)
+                            .padding(0.5)
+                            .foregroundColor(Color(r: 151, g: 151, b: 153))
                         }
+                        .padding()
+                        VStack(alignment: .leading) {
+                            Group {
+                                Text("\(viewModel.currentWind!) m/s")
+                                Text("\(viewModel.currentHumidity!)%")
+                                Text("\(viewModel.currentTemperatureFeels!)º")
+                                Text("\(viewModel.currentPressure!) mbar")
+                            }
+                            .font(.title3)
+                            .padding(0.5)
+                        }
+                        .padding()
                         Spacer()
                     }
-                    .padding()
-                }
-                HStack {
-                    VStack(alignment: .leading) {
-                        Group {
-                            Text("Wind")
-                            Text("Humidity")
-                            Text("Feels like")
-                            Text("Pressure")
-                        }
-                        .font(.title3)
-                        .padding(0.5)
-                        .foregroundColor(Color(r: 151, g: 151, b: 153))
-                    }
-                    .padding()
-                    VStack(alignment: .leading) {
-                        Group {
-                            Text("5 m/s")
-                            Text("91%")
-                            Text("27º")
-                            Text("1000 mbar")
-                        }
-                        .font(.title3)
-                        .padding(0.5)
-                    }
-                    .padding()
+                    .padding(.top)
                     Spacer()
-                }
-                .padding(.top)
-                Spacer()
-                Divider()
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(0 ..< hourlyWeather.count) { column in
-                            VStack(alignment: .center) {
-                                Text(hourlyTime[column])
-                                Image(hourlyWeather[column])
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 45, height: 45, alignment: .center)
-                                Text(hourlyTemperature[column])
-                            }
-                            .padding(10)
-                        }
-                    }
-                }
-                .padding(.vertical)
-                Divider()
-                ScrollView(.vertical, showsIndicators: false) {
-                    ForEach(0 ..< dailyWeather.count) { column in
-                        ZStack(alignment: .center) {
-                            HStack {
-                                // TODO: Convert date to days of the week
-                                Text(dailyDate[column])
-                                Spacer()
-                                HStack {
-                                    Text(dailyTemperatureDay[column])
-                                    Text(dailyTemperatureNight[column])
-                                        .foregroundColor(Color.init(r: 150, g: 150, b: 150))
+                    Divider()
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            ForEach(0 ..< hourlyWeather.count) { column in
+                                VStack(alignment: .center) {
+                                    Text(hourlyTime[column])
+                                    Image(hourlyWeather[column])
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 45, height: 45, alignment: .center)
+                                    Text(hourlyTemperature[column])
                                 }
+                                .padding(10)
                             }
-                            Image(dailyWeather[column])
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 30, height: 30)
                         }
                     }
+                    .padding(.vertical)
+                    Divider()
+                    ScrollView(.vertical, showsIndicators: false) {
+                        ForEach(0 ..< viewModel.dailyWeather.count) { column in
+                            ZStack(alignment: .center) {
+                                HStack {
+                                    // TODO: Convert date to days of the week
+                                    Text(viewModel.dailyDate[column])
+                                    Spacer()
+                                    HStack {
+                                        Text("\(String(format: "%.0f",viewModel.dailyTemperature[column].day))°")
+                                        Text("\(String(format: "%.0f",viewModel.dailyTemperature[column].night))°")
+                                            .foregroundColor(Color.init(r: 150, g: 150, b: 150))
+                                    }
+                                }
+                                Image(viewModel.dailyWeather[column].main)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 30, height: 30)
+                            }
+                        }
+                    }
+                    .padding([.leading, .trailing])
                 }
-                .padding([.leading, .trailing])
+                
             }
-            
+            .foregroundColor(Color.init(r: 55, g: 55, b: 55))
         }
-        .foregroundColor(Color.init(r: 55, g: 55, b: 55))
     }
 }
 
@@ -160,12 +168,3 @@ struct WeatherDetail_Previews: PreviewProvider {
         WeatherMainView()
     }
 }
-
-
-/*if viewModel.lat == 0.0 || viewModel.lon == nil {
- LoadingScreen()
-     .onAppear(perform: viewModel.getCoordinates)
-} else if viewModel.cityName == nil {
- LoadingScreen()
-     .onAppear(perform: viewModel.bindWeatherData)
-} else { */

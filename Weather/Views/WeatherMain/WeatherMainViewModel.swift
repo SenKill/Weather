@@ -10,36 +10,59 @@ import SwiftUI
 import CoreLocation
 
 final class WeatherMainViewModel: ObservableObject {
-    @Published var date: [String] = []
-    @Published var degrees: [Temperature] = []
-    @Published var weatherType: [WeatherDescription] = []
-    @Published var windSpeed: [Float] = []
+    @Published var cityName: String?
+    @Published var currentDate: String?
+    @Published var currentTemperature: String?
+    @Published var currentWeather: String?
+    @Published var currentWind: String?
+    @Published var currentHumidity: Int?
+    @Published var currentTemperatureFeels: String?
+    @Published var currentPressure: Int?
+    
+    @Published var hourlyDate: [String] = []
+    @Published var hourlyTemperature: [Float] = []
+    @Published var hourlyWeather: [WeatherDescription] = []
+    @Published var hourlyWind: [Float] = []
+    
+    @Published var dailyDate: [String] = []
+    @Published var dailyTemperature: [Temperature] = []
+    @Published var dailyWeather: [WeatherDescription] = []
+    @Published var dailyWind: [Float] = []
     
     @Published var lat: Double?
     @Published var lon: Double?
     
-    @Published var cityName: String?
-    @Published var cTemperature: String?
-    @Published var cWeather: String?
-    @Published var cWindSpeed: Float?
+
     
     @ObservedObject private var locationManager = LocationManager()
     
     func bindWeatherData() {
         Api().getData(latitude: String(self.lat!), longtitude: String(self.lon!)) { (data) in
-            self.cTemperature = String(format: "%.0f", data.current.temp)
-            self.cTemperature?.append("ºC")
-            self.cWeather = data.current.weather[0].main
-            self.cWindSpeed = data.current.wind_speed
+            self.currentTemperature = String(format: "%.0f", data.current.temp)
+            self.currentTemperature?.append("º")
+            self.currentWeather = data.current.weather[0].main
+            self.currentWind = String(format: "%.1f", data.current.wind_speed)
+            self.currentHumidity = data.current.humidity
+            self.currentTemperatureFeels = String(format: "%.0f", data.current.feels_like)
+            self.currentPressure = data.current.pressure
                     
             self.getCityName(lat: self.lat!, lon: self.lon!)
                     
             let timeZone = TimeZone(identifier: data.timezone)
-            for i in 0..<data.daily.count {
-                self.date.append(Double(data.daily[i].dt).getDateFromUTC(timeZone: timeZone!))
-                self.degrees.append(data.daily[i].temp)
-                self.weatherType.append(contentsOf: data.daily[i].weather)
-                self.windSpeed.append(data.daily[i].wind_speed)
+            
+            // getDateFromUTC method need to be changed for hourly forecast
+            for i in 0 ..< data.hourly.count {
+                self.hourlyDate.append(Double(data.hourly[i].dt).getDateDaily(timeZone: timeZone!))
+                self.hourlyTemperature.append(data.hourly[i].temp)
+                self.hourlyWeather.append(contentsOf: data.hourly[i].weather)
+                self.hourlyWind.append(data.hourly[i].wind_speed)
+            }
+            
+            for i in 0 ..< data.daily.count {
+                self.dailyDate.append(Double(data.daily[i].dt).getDateDaily(timeZone: timeZone!))
+                self.dailyTemperature.append(data.daily[i].temp)
+                self.dailyWeather.append(contentsOf: data.daily[i].weather)
+                self.dailyWind.append(data.daily[i].wind_speed)
             }
         }
     }
