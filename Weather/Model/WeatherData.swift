@@ -9,20 +9,28 @@ import Foundation
 import CoreLocation
 
 extension Double {
+    func getDateCurrent(timeZone: TimeZone) -> String {
+        let date = Date(timeIntervalSince1970: self)
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = timeZone
+        dateFormatter.dateFormat = "HH:mm, EEE MMM dd"
+        return dateFormatter.string(from: date)
+    }
+    
+    func getDateHourly(timeZone: TimeZone) -> String {
+        let date = Date(timeIntervalSince1970: self)
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = timeZone
+        dateFormatter.dateFormat = "HH:mm"
+        return dateFormatter.string(from: date)
+    }
+    
     func getDateDaily(timeZone: TimeZone) -> String {
         let date = Date(timeIntervalSince1970: self)
         let dateFormatter = DateFormatter()
-        dateFormatter.setLocalizedDateFormatFromTemplate("MMMd")
-        let localDate = dateFormatter.string(from: date)
-        return localDate
-    }
-    
-    func getDateCurrent() {
-        // TODO: Convert dt from Model to Data and provide it into the ViewModel
-    }
-    
-    func getDateHourly() {
-        // TODO: Convert dt from Model to Data and provide it into the ViewModel
+        dateFormatter.setLocalizedDateFormatFromTemplate("EEEE")
+        dateFormatter.timeZone = timeZone
+        return dateFormatter.string(from: date)
     }
 }
 

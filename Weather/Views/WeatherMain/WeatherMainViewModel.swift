@@ -38,6 +38,9 @@ final class WeatherMainViewModel: ObservableObject {
     
     func bindWeatherData() {
         Api().getData(latitude: String(self.lat!), longtitude: String(self.lon!)) { (data) in
+            let timeZone = TimeZone(identifier: data.timezone)
+            
+            self.currentDate = Double(data.current.dt).getDateCurrent(timeZone: timeZone!)
             self.currentTemperature = String(format: "%.0f", data.current.temp)
             self.currentTemperature?.append("º")
             self.currentWeather = data.current.weather[0].main
@@ -47,12 +50,9 @@ final class WeatherMainViewModel: ObservableObject {
             self.currentPressure = data.current.pressure
                     
             self.getCityName(lat: self.lat!, lon: self.lon!)
-                    
-            let timeZone = TimeZone(identifier: data.timezone)
             
-            // getDateFromUTC method need to be changed for hourly forecast
             for i in 0 ..< data.hourly.count {
-                self.hourlyDate.append(Double(data.hourly[i].dt).getDateDaily(timeZone: timeZone!))
+                self.hourlyDate.append(Double(data.hourly[i].dt).getDateHourly(timeZone: timeZone!))
                 self.hourlyTemperature.append(data.hourly[i].temp)
                 self.hourlyWeather.append(contentsOf: data.hourly[i].weather)
                 self.hourlyWind.append(data.hourly[i].wind_speed)
@@ -86,11 +86,7 @@ final class WeatherMainViewModel: ObservableObject {
                 if let placemarks = placemarks, let placemark = placemarks.first {
                     let country = placemark.country!
                     let city = placemark.locality ?? placemark.administrativeArea
-                    var subCity = placemark.subLocality
-                    if subCity != nil {
-                        subCity!.append(", ")
-                    }
-                    self.cityName = (subCity ?? "") + (city ?? "City not found") + ", " + country
+                    self.cityName = (city ?? "City not found") + ", " + country
                 }
             }
         }

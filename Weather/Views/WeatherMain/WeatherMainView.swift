@@ -54,7 +54,7 @@ struct WeatherMainView: View {
                     VStack {
                         HStack {
                             VStack {
-                                Text("10:25 pm, Sat Nov 13") // Current date
+                                Text(viewModel.currentDate!) // Current date
                                 Text(viewModel.cityName!)
                                     .font(.title3)
                                     .fontWeight(.medium)
@@ -138,7 +138,6 @@ struct WeatherMainView: View {
                         ForEach(0 ..< viewModel.dailyWeather.count) { column in
                             ZStack(alignment: .center) {
                                 HStack {
-                                    // TODO: Convert date to days of the week
                                     Text(viewModel.dailyDate[column])
                                     Spacer()
                                     HStack {
