@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-// TODO: Hourly forecast
-
 // TODO: City selector
 
 extension Color {
@@ -20,16 +18,6 @@ extension Color {
 struct WeatherMainView: View {
     
     @ObservedObject private var viewModel = WeatherMainViewModel()
-    
-    // Replace theese with viewModel later
-    let hourlyWeather = ["Clear", "Clear", "Clear", "Clouds", "Clouds", "Snow"]
-    let hourlyTemperature = ["-5º", "-4º", "-2º", "-3º", "-4º", "-3º"]
-    let hourlyTime = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00"]
-    
-    let dailyDate = ["14.11", "15.11", "16.11", "17.11", "18.11"]
-    let dailyWeather = ["Clear", "Clouds", "Snow", "Snow", "Snow"]
-    let dailyTemperatureDay = ["3º", "1º", "-2º", "-5º", "-3º"]
-    let dailyTemperatureNight = ["0º", "-1º", "-4º", "-6º", "-8º"]
     
     // TODO: Change fonts!
     var body: some View {
@@ -119,14 +107,14 @@ struct WeatherMainView: View {
                     Divider()
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
-                            ForEach(0 ..< hourlyWeather.count) { column in
+                            ForEach(0 ..< viewModel.hourlyWeather.count) { column in
                                 VStack(alignment: .center) {
-                                    Text(hourlyTime[column])
-                                    Image(hourlyWeather[column])
+                                    Text(viewModel.hourlyDate[column])
+                                    Image(viewModel.hourlyWeather[column].main)
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 45, height: 45, alignment: .center)
-                                    Text(hourlyTemperature[column])
+                                    Text("\(String(format: "%.0f",viewModel.hourlyTemperature[column]))º")
                                 }
                                 .padding(10)
                             }
@@ -146,7 +134,7 @@ struct WeatherMainView: View {
                                             .foregroundColor(Color.init(r: 150, g: 150, b: 150))
                                     }
                                 }
-                                Image(viewModel.dailyWeather[column].main)
+                                Image(viewModel.dailyWeather[column].main) // TODO: Change icons to better and use description not main
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 30, height: 30)

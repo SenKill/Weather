@@ -13,7 +13,7 @@ extension Double {
         let date = Date(timeIntervalSince1970: self)
         let dateFormatter = DateFormatter()
         dateFormatter.timeZone = timeZone
-        dateFormatter.dateFormat = "HH:mm, EEE MMM dd"
+        dateFormatter.dateFormat = "HH:mm, EEEE MMM dd"
         return dateFormatter.string(from: date)
     }
     
