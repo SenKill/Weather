@@ -9,11 +9,13 @@ import Foundation
 import SwiftUI
 import CoreLocation
 
+
+// TODO: Save latest data to UserDefaults or CoreData
 final class WeatherMainViewModel: ObservableObject {
     @Published var cityName: String?
     @Published var currentDate: String?
     @Published var currentTemperature: String?
-    @Published var currentWeather: String?
+    @Published var currentWeather: WeatherDescription?
     @Published var currentWind: String?
     @Published var currentHumidity: Int?
     @Published var currentTemperatureFeels: String?
@@ -43,7 +45,7 @@ final class WeatherMainViewModel: ObservableObject {
             self.currentDate = Double(data.current.dt).getDateCurrent(timeZone: timeZone!)
             self.currentTemperature = String(format: "%.0f", data.current.temp)
             self.currentTemperature?.append("º")
-            self.currentWeather = data.current.weather[0].main
+            self.currentWeather = data.current.weather[0]
             self.currentWind = String(format: "%.1f", data.current.wind_speed)
             self.currentHumidity = data.current.humidity
             self.currentTemperatureFeels = String(format: "%.0f", data.current.feels_like)

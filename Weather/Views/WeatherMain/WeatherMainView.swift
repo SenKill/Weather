@@ -19,7 +19,6 @@ struct WeatherMainView: View {
     
     @ObservedObject private var viewModel = WeatherMainViewModel()
     
-    // TODO: Change fonts!
     var body: some View {
         if viewModel.lat == 0.0 || viewModel.lon == nil {
          LoadingScreen()
@@ -32,10 +31,10 @@ struct WeatherMainView: View {
                 Color.init(r: 245, g: 245, b: 245)
                     .ignoresSafeArea()
                 ZStack {
-                    Image("sunny") // Change this later to data from view model, and find images for an other weather
+                    Image(viewModel.currentWeather!.icon) // Change this later to data from view model, and find images for an other weather
                         .resizable()
                         .scaledToFit()
-                        .blur(radius: 20)
+                        // .blur(radius: 2)
                         .offset(x: 200, y: -100)
                 }
                 VStack {
@@ -65,7 +64,7 @@ struct WeatherMainView: View {
                                 .frame(width: 3, height: 100, alignment: .center)
                             VStack(alignment: .leading) {
                                 Group {
-                                    Text(viewModel.currentWeather!)
+                                    Text(viewModel.currentWeather!.description)
                                     Text("H: \(String(format: "%.0f" ,viewModel.dailyTemperature[0].max))º")
                                     Text("L: \(String(format: "%.0f" ,viewModel.dailyTemperature[0].min))º")
                                 }
@@ -134,7 +133,7 @@ struct WeatherMainView: View {
                                             .foregroundColor(Color.init(r: 150, g: 150, b: 150))
                                     }
                                 }
-                                Image(viewModel.dailyWeather[column].main) // TODO: Change icons to better and use description not main
+                                Image(viewModel.dailyWeather[column].main) // TODO: Change icons to better ones and use the weather description
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 30, height: 30)

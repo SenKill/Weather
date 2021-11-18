@@ -124,7 +124,6 @@ struct WeatherData: Codable {
     var daily: [DailyWeather]
 }
 
-// TODO: Custom coordinates for api call
 class Api {
     func getData(latitude: String, longtitude: String ,completion: @escaping (WeatherData) -> ()) {
         guard let url = URL(string: "https://api.openweathermap.org/data/2.5/onecall?lat=\(latitude)&lon=\(longtitude)&exclude=minutely&units=metric&appid=a0c0a6cb62d01e7faf2d0aa659b1b981") else {
