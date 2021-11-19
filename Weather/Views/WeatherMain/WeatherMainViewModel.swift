@@ -39,7 +39,7 @@ final class WeatherMainViewModel: ObservableObject {
     @ObservedObject private var locationManager = LocationManager()
     
     func bindWeatherData() {
-        Api().getData(latitude: String(self.lat!), longtitude: String(self.lon!)) { (data) in
+        Data().getData(latitude: String(self.lat!), longtitude: String(self.lon!)) { (data) in
             let timeZone = TimeZone(identifier: data.timezone)
             
             self.currentDate = Double(data.current.dt).getDateCurrent(timeZone: timeZone!)
@@ -51,7 +51,7 @@ final class WeatherMainViewModel: ObservableObject {
             self.currentTemperatureFeels = String(format: "%.0f", data.current.feels_like)
             self.currentPressure = data.current.pressure
                     
-            self.getCityName(lat: self.lat!, lon: self.lon!)
+            self.coordinatesToCity(lat: self.lat!, lon: self.lon!)
             
             for i in 0 ..< data.hourly.count {
                 self.hourlyDate.append(Double(data.hourly[i].dt).getDateHourly(timeZone: timeZone!))
@@ -77,7 +77,7 @@ final class WeatherMainViewModel: ObservableObject {
         }
     }
     
-    private func getCityName(lat: Double, lon: Double) {
+    private func coordinatesToCity(lat: Double, lon: Double) {
         let geocoder = CLGeocoder()
         let location = CLLocation(latitude: lat, longitude: lon)
         

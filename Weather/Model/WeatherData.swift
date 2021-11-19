@@ -6,33 +6,6 @@
 //
 
 import Foundation
-import CoreLocation
-
-extension Double {
-    func getDateCurrent(timeZone: TimeZone) -> String {
-        let date = Date(timeIntervalSince1970: self)
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeZone = timeZone
-        dateFormatter.dateFormat = "HH:mm, EEEE MMM dd"
-        return dateFormatter.string(from: date)
-    }
-    
-    func getDateHourly(timeZone: TimeZone) -> String {
-        let date = Date(timeIntervalSince1970: self)
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeZone = timeZone
-        dateFormatter.dateFormat = "HH:mm"
-        return dateFormatter.string(from: date)
-    }
-    
-    func getDateDaily(timeZone: TimeZone) -> String {
-        let date = Date(timeIntervalSince1970: self)
-        let dateFormatter = DateFormatter()
-        dateFormatter.setLocalizedDateFormatFromTemplate("EEEE")
-        dateFormatter.timeZone = timeZone
-        return dateFormatter.string(from: date)
-    }
-}
 
 struct WeatherDescription: Codable {
     var id: Int
@@ -124,7 +97,7 @@ struct WeatherData: Codable {
     var daily: [DailyWeather]
 }
 
-class Api {
+class Data {
     func getData(latitude: String, longtitude: String ,completion: @escaping (WeatherData) -> ()) {
         guard let url = URL(string: "https://api.openweathermap.org/data/2.5/onecall?lat=\(latitude)&lon=\(longtitude)&exclude=minutely&units=metric&appid=a0c0a6cb62d01e7faf2d0aa659b1b981") else {
             print("Wrong URL")
@@ -138,5 +111,9 @@ class Api {
             }
         }
         .resume()
+    }
+    
+    func cityToCoordinates(city: String) {
+        
     }
 }

@@ -31,7 +31,7 @@ struct WeatherMainView: View {
                 Color.init(r: 245, g: 245, b: 245)
                     .ignoresSafeArea()
                 ZStack {
-                    Image(viewModel.currentWeather!.icon) // Change this later to data from view model, and find images for an other weather
+                    Image(viewModel.currentWeather!.icon + "b")
                         .resizable()
                         .scaledToFit()
                         // .blur(radius: 2)
@@ -76,32 +76,30 @@ struct WeatherMainView: View {
                         .padding()
                     }
                     HStack {
-                        VStack(alignment: .leading) {
-                            Group {
-                                Text("Wind")
-                                Text("Humidity")
-                                Text("Feels like")
-                                Text("Pressure")
+                        VStack {
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text("Wind")
+                                    Text("Humidity")
+                                    Text("Feels like")
+                                    Text("Pressure")
+                                }
+                                .font(.title3)
+                                .padding(0.5)
+                                .foregroundColor(Color(r: 151, g: 151, b: 153))
+                                VStack(alignment: .leading) {
+                                    Text("\(viewModel.currentWind!)m/s")
+                                    Text("\(viewModel.currentHumidity!)%")
+                                    Text("\(viewModel.currentTemperatureFeels!)º")
+                                    Text("\(viewModel.currentPressure!)mbar")
+                                }
+                                .font(.title3)
+                                .padding(0.5)
                             }
-                            .font(.title3)
-                            .padding(0.5)
-                            .foregroundColor(Color(r: 151, g: 151, b: 153))
                         }
-                        .padding()
-                        VStack(alignment: .leading) {
-                            Group {
-                                Text("\(viewModel.currentWind!) m/s")
-                                Text("\(viewModel.currentHumidity!)%")
-                                Text("\(viewModel.currentTemperatureFeels!)º")
-                                Text("\(viewModel.currentPressure!) mbar")
-                            }
-                            .font(.title3)
-                            .padding(0.5)
-                        }
-                        .padding()
                         Spacer()
                     }
-                    .padding(.top)
+                    .padding()
                     Spacer()
                     Divider()
                     ScrollView(.horizontal, showsIndicators: false) {
@@ -109,11 +107,13 @@ struct WeatherMainView: View {
                             ForEach(0 ..< viewModel.hourlyWeather.count) { column in
                                 VStack(alignment: .center) {
                                     Text(viewModel.hourlyDate[column])
-                                    Image(viewModel.hourlyWeather[column].main)
+                                    Image(viewModel.hourlyWeather[column].icon)
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
-                                        .frame(width: 45, height: 45, alignment: .center)
-                                    Text("\(String(format: "%.0f",viewModel.hourlyTemperature[column]))º")
+                                        .frame(width: 60, height: 60, alignment: .center)
+                                    Text("\(String(format: "%.0f" ,viewModel.hourlyTemperature[column]))º")
+                                        .font(.title3)
+                                    Text("\(String(format: "%.1f" ,viewModel.hourlyWind[column]))m/s")
                                 }
                                 .padding(10)
                             }
@@ -121,6 +121,7 @@ struct WeatherMainView: View {
                     }
                     .padding(.vertical)
                     Divider()
+                    // TODO: Create another view and window for dailyForecast
                     ScrollView(.vertical, showsIndicators: false) {
                         ForEach(0 ..< viewModel.dailyWeather.count) { column in
                             ZStack(alignment: .center) {
@@ -133,10 +134,10 @@ struct WeatherMainView: View {
                                             .foregroundColor(Color.init(r: 150, g: 150, b: 150))
                                     }
                                 }
-                                Image(viewModel.dailyWeather[column].main) // TODO: Change icons to better ones and use the weather description
+                                Image(viewModel.dailyWeather[column].icon)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 30, height: 30)
+                                    .frame(width: 40, height: 40)
                             }
                         }
                     }
