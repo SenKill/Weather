@@ -18,6 +18,7 @@ extension Color {
 struct WeatherMainView: View {
     
     @ObservedObject private var viewModel = WeatherMainViewModel()
+    @State var test = false
     
     var body: some View {
         if viewModel.lat == 0.0 || viewModel.lon == nil {
@@ -35,7 +36,7 @@ struct WeatherMainView: View {
                         .resizable()
                         .scaledToFit()
                         // .blur(radius: 2)
-                        .offset(x: 200, y: -100)
+                        .offset(x: 200, y: -125)
                 }
                 VStack {
                     VStack {
@@ -48,11 +49,30 @@ struct WeatherMainView: View {
                                     
                             }
                             Spacer()
-                            Button(action: viewModel.getCoordinates, label: { // TODO: Menu and it's call
+                            // Nav View
+                            Menu {
+                                NavigationLink(destination: SettingsView(),
+                                    label: {
+                                        Label("Settings", systemImage: "gearshape.fill")
+                                    })
+                                Button {
+                                    test.toggle()
+                                } label: {
+                                    Label("Change city", systemImage: "paperplane.circle")
+                                }
+                                
+                                Button {
+                                    test.toggle()
+                                } label: {
+                                    Label("Cancel", systemImage: "x.circle")
+                                        .foregroundColor(.red)
+                                }
+                                
+                            } label: {
                                 Image(systemName: "list.dash")
                                     .resizable()
                                     .frame(width: 25, height: 20, alignment: .center)
-                            })
+                            }
                         }
                         .padding()
                         HStack {
@@ -102,48 +122,10 @@ struct WeatherMainView: View {
                     .padding()
                     Spacer()
                     Divider()
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack {
-                            ForEach(0 ..< viewModel.hourlyWeather.count) { column in
-                                VStack(alignment: .center) {
-                                    Text(viewModel.hourlyDate[column])
-                                    Image(viewModel.hourlyWeather[column].icon)
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 60, height: 60, alignment: .center)
-                                    Text("\(String(format: "%.0f" ,viewModel.hourlyTemperature[column]))º")
-                                        .font(.title3)
-                                    Text("\(String(format: "%.1f" ,viewModel.hourlyWind[column]))m/s")
-                                }
-                                .padding(10)
-                            }
-                        }
-                    }
-                    .padding(.vertical)
+                    HourlyForecastView(viewModel: self.viewModel)
                     Divider()
-                    // TODO: Create another view and window for dailyForecast
-                    ScrollView(.vertical, showsIndicators: false) {
-                        ForEach(0 ..< viewModel.dailyWeather.count) { column in
-                            ZStack(alignment: .center) {
-                                HStack {
-                                    Text(viewModel.dailyDate[column])
-                                    Spacer()
-                                    HStack {
-                                        Text("\(String(format: "%.0f",viewModel.dailyTemperature[column].day))°")
-                                        Text("\(String(format: "%.0f",viewModel.dailyTemperature[column].night))°")
-                                            .foregroundColor(Color.init(r: 150, g: 150, b: 150))
-                                    }
-                                }
-                                Image(viewModel.dailyWeather[column].icon)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 40, height: 40)
-                            }
-                        }
-                    }
-                    .padding([.leading, .trailing])
+                    DailyForecastView(viewModel: self.viewModel)
                 }
-                
             }
             .foregroundColor(Color.init(r: 55, g: 55, b: 55))
         }
