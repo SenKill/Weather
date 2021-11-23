@@ -15,10 +15,27 @@ extension Color {
     }
 }
 
+enum ViewSelector {
+    case main, settings, citySearch
+}
+
+struct viewReturner: View {
+    var view: ViewSelector
+        
+    var body: some View {
+        if view == .settings {
+            SettingsView()
+        } else {
+            CitySearchView()
+        }
+    }
+}
+
 struct WeatherMainView: View {
     
     @ObservedObject private var viewModel = WeatherMainViewModel()
-    @State var test = false
+    @State private var selectedView = ViewSelector.main
+    @State private var isActive = false
     
     var body: some View {
         if viewModel.lat == 0.0 || viewModel.lon == nil {
@@ -49,29 +66,33 @@ struct WeatherMainView: View {
                                     
                             }
                             Spacer()
-                            // Nav View
-                            Menu {
-                                NavigationLink(destination: SettingsView(),
-                                    label: {
+                            NavigationView {
+                                Menu {
+                                    Button {
+                                        selectedView = .settings
+                                        isActive = true
+                                    } label: {
                                         Label("Settings", systemImage: "gearshape.fill")
-                                    })
-                                Button {
-                                    test.toggle()
+                                    }
+                                    
+                                    Button {
+                                        selectedView = .citySearch
+                                        isActive = true
+                                    } label: {
+                                        Label("Change city", systemImage: "paperplane.circle")
+                                    }
+                                    
+                                    Button {
+                                        cancel()
+                                    } label: {
+                                        Label("Cancel", systemImage: "x.circle")
+                                            .foregroundColor(.red)
+                                    }
                                 } label: {
-                                    Label("Change city", systemImage: "paperplane.circle")
+                                    Image(systemName: "list.dash")
+                                        .resizable()
+                                        .frame(width: 25, height: 20, alignment: .center)
                                 }
-                                
-                                Button {
-                                    test.toggle()
-                                } label: {
-                                    Label("Cancel", systemImage: "x.circle")
-                                        .foregroundColor(.red)
-                                }
-                                
-                            } label: {
-                                Image(systemName: "list.dash")
-                                    .resizable()
-                                    .frame(width: 25, height: 20, alignment: .center)
                             }
                         }
                         .padding()
@@ -130,6 +151,8 @@ struct WeatherMainView: View {
             .foregroundColor(Color.init(r: 55, g: 55, b: 55))
         }
     }
+    
+    func cancel() { }
 }
 
 struct WeatherDetail_Previews: PreviewProvider {
