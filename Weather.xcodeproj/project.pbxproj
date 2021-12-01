@@ -98,16 +98,9 @@
 			isa = PBXGroup;
 			children = (
 				F7152404274B6D6700FB0447 /* SettingsView.swift */,
-			);
-			path = Settings;
-			sourceTree = "<group>";
-		};
-		F71523FB274B6D2700FB0447 /* CitySearch */ = {
-			isa = PBXGroup;
-			children = (
 				F71523FC274B6D5B00FB0447 /* CitySearchView.swift */,
 			);
-			path = CitySearch;
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		F7257E6C27081F30005C5076 = {
@@ -183,8 +176,8 @@
 			isa = PBXGroup;
 			children = (
 				F7257EA627081F7D005C5076 /* WeatherMainView.swift */,
-				F7235DBC274D0CD6003533A5 /* test.swift */,
 				F77EA9402712C5F2000B8883 /* WeatherMainViewModel.swift */,
+				F7235DBC274D0CD6003533A5 /* test.swift */,
 			);
 			path = WeatherMain;
 			sourceTree = "<group>";
@@ -193,7 +186,6 @@
 			isa = PBXGroup;
 			children = (
 				F780FAB72732B39100F93491 /* AuxViews */,
-				F71523FB274B6D2700FB0447 /* CitySearch */,
 				F71523FA274B6D1B00FB0447 /* Settings */,
 				F77EA9382712C559000B8883 /* WeatherMain */,
 			);

@@ -10,14 +10,16 @@ import SwiftUI
 struct SettingsView: View {
     var body: some View {
         // TODO: Set up settings view
-        NavigationView {
-            List {
-                Text("First")
-                Text("Second")
-                Text("Third")
-            }
-            .navigationTitle("Settings")
+        List {
+            NavigationLink(
+                destination: CitySearchView(),
+                label: {
+                    Text("Change city")
+            })
+            Text("Second")
+            Text("Third")
         }
+        .navigationTitle("Settings")
     }
 }
 

@@ -9,7 +9,10 @@ import SwiftUI
 
 struct CitySearchView: View {
     var body: some View {
-        Circle()
+        Text("City changer")
+            .navigationTitle("City changer")
+            .navigationBarTitleDisplayMode(.inline)
+        // City search
     }
 }
 
