@@ -8,9 +8,17 @@
 import SwiftUI
 
 struct DemoNavigateFromMenu: View {
+    @State private var language = Language.en
     
     var body: some View {
-        Text("Hello")
+        VStack {
+            Text(language.cleanValue)
+            Button(action: {
+                language = .ru
+            }, label: {
+                Text(language.rawValue)
+            })
+        }
     }
 }
 

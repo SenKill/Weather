@@ -29,7 +29,7 @@ struct WeatherMainView: View {
         } else {
             NavigationView {
                 ZStack {
-                    Color.init(r: 245, g: 245, b: 245)
+                    Color(r: 245, g: 245, b: 245)
                         .ignoresSafeArea()
                     ZStack {
                         // MARK: Background Image

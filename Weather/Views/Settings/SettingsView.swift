@@ -7,19 +7,80 @@
 
 import SwiftUI
 
+// MARK: List of languages
+enum Language: String, CaseIterable, Identifiable {
+    case en = "English"
+    case ru = "Russian"
+    
+    var cleanValue: String {
+        switch self {
+        case .en: return "en"
+        case .ru: return "ru"
+        }
+    }
+    
+    var id: String { self.rawValue }
+}
+
+enum Units: String {
+    case metric = "Celsius, metre/s."
+    case imperial = "Fahrenheit, miles/h"
+    
+    var cleanValue: String {
+        switch self {
+        case .metric: return "metric"
+        case .imperial: return "imperial"
+        }
+    }
+}
+
 struct SettingsView: View {
+    @State private var units = Units.metric
+    @State private var language = Language.en
+    
     var body: some View {
         // TODO: Set up settings view
-        List {
-            NavigationLink(
-                destination: CitySearchView(),
-                label: {
-                    Text("Change city")
+        VStack {
+            List {
+                Section(header: Text("Main")) {
+                    NavigationLink(
+                        destination: CitySearchView(),
+                        label: {
+                            Text("Change city")
+                    })
+                    HStack {
+                        Text("Units")
+                        Spacer()
+                        Picker(selection: $units, label: Text(units.rawValue), content: {
+                            Text("Celsius, metre/s.").tag(Units.metric)
+                            Text("Fahrenheit, miles/h").tag(Units.imperial)
+                        })
+                        .pickerStyle(MenuPickerStyle())
+                    }
+                }
+                Section(header: Text("Other")) {
+                    HStack {
+                        Text("Lanuage")
+                        Spacer()
+                        Picker(selection: $language, label: Text(language.rawValue), content: {
+                            ForEach(Language.allCases) { localLanguage in
+                                Text(localLanguage.rawValue).tag(localLanguage)
+                            }
+                        })
+                        .pickerStyle(MenuPickerStyle())
+                        
+                    }
+                }
+            }
+            .navigationTitle("Settings")
+            .listStyle(InsetGroupedListStyle())
+            Button(action: {
+                print(self.language.cleanValue)
+                print(self.units.cleanValue)
+            }, label: {
+                /*@START_MENU_TOKEN@*/Text("Button")/*@END_MENU_TOKEN@*/
             })
-            Text("Second")
-            Text("Third")
         }
-        .navigationTitle("Settings")
     }
 }
 

@@ -99,7 +99,7 @@ struct WeatherData: Codable {
 
 class Data {
     func getData(latitude: String, longtitude: String ,completion: @escaping (WeatherData) -> ()) {
-        guard let url = URL(string: "https://api.openweathermap.org/data/2.5/onecall?lat=\(latitude)&lon=\(longtitude)&exclude=minutely&units=metric&appid=a0c0a6cb62d01e7faf2d0aa659b1b981") else {
+        guard let url = URL(string: "https://api.openweathermap.org/data/2.5/onecall?lat=\(latitude)&lon=\(longtitude)&exclude=minutely,alerts&units=metric&appid=a0c0a6cb62d01e7faf2d0aa659b1b981") else {
             print("Wrong URL")
             return }
         
