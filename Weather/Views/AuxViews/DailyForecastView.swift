@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DailyForecastView: View {
-    @ObservedObject var viewModel: WeatherMainViewModel
+    @EnvironmentObject private var viewModel: WeatherMainViewModel
     
     var body: some View {
         // TODO: Create another view and window for dailyForecast
@@ -21,7 +21,7 @@ struct DailyForecastView: View {
                         HStack {
                             Text("\(String(format: "%.0f",viewModel.dailyTemperature[column].day))°")
                             Text("\(String(format: "%.0f",viewModel.dailyTemperature[column].night))°")
-                                .foregroundColor(Color.init(r: 150, g: 150, b: 150))
+                                .foregroundColor(Color.secondary)
                         }
                     }
                     Image(viewModel.dailyWeather[column].icon)

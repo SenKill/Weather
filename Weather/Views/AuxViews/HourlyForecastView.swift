@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HourlyForecastView: View {
-    @ObservedObject var viewModel: WeatherMainViewModel
+    @EnvironmentObject private var viewModel: WeatherMainViewModel
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {

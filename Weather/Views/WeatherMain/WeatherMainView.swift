@@ -17,19 +17,19 @@ extension Color {
 
 struct WeatherMainView: View {
     
-    @ObservedObject private var viewModel = WeatherMainViewModel()
+    @EnvironmentObject private var viewModel: WeatherMainViewModel
     
     var body: some View {
         if viewModel.lat == 0.0 || viewModel.lon == nil {
-         LoadingScreen()
-             .onAppear(perform: viewModel.getCoordinates)
+            LoadingScreen()
+                .onAppear(perform: viewModel.getCoordinates)
         } else if viewModel.cityName == nil {
-         LoadingScreen()
-             .onAppear(perform: viewModel.bindWeatherData)
+            LoadingScreen()
+                .onAppear(perform: viewModel.bindWeatherData)
         } else {
             NavigationView {
                 ZStack {
-                    Color(r: 245, g: 245, b: 245)
+                    Color.theme.background
                         .ignoresSafeArea()
                     ZStack {
                         // MARK: Background Image
@@ -57,7 +57,7 @@ struct WeatherMainView: View {
                                             .resizable()
                                             .scaledToFit()
                                             .frame(minWidth: 30, idealWidth: 35, maxWidth: 40, minHeight: 30, idealHeight: 35, maxHeight: 40, alignment: .center)
-                                })
+                                    })
                             }
                             .padding()
                             HStack {
@@ -91,7 +91,7 @@ struct WeatherMainView: View {
                                     }
                                     .font(.title3)
                                     .padding(0.5)
-                                    .foregroundColor(Color(r: 151, g: 151, b: 153))
+                                    .foregroundColor(Color.secondary)
                                     VStack(alignment: .leading) {
                                         Text("\(viewModel.currentWind!)m/s")
                                         Text("\(viewModel.currentHumidity!)%")
@@ -107,12 +107,12 @@ struct WeatherMainView: View {
                         .padding()
                         Spacer()
                         Divider()
-                        HourlyForecastView(viewModel: self.viewModel)
+                        HourlyForecastView()
                         Divider()
-                        DailyForecastView(viewModel: self.viewModel)
+                        DailyForecastView()
                     }
                 }
-                .foregroundColor(Color.init(r: 55, g: 55, b: 55))
+                .foregroundColor(Color.primary)
                 .navigationBarTitle("Back")
                 .navigationBarHidden(true)
             }

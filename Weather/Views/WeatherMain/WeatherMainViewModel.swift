@@ -87,7 +87,7 @@ final class WeatherMainViewModel: ObservableObject {
             } else {
                 if let placemarks = placemarks, let placemark = placemarks.first {
                     let country = placemark.country!
-                    let city = placemark.locality ?? placemark.administrativeArea
+                    let city = placemark.locality ?? placemark.subAdministrativeArea ?? placemark.administrativeArea
                     self.cityName = (city ?? "City not found") + ", " + country
                 }
             }

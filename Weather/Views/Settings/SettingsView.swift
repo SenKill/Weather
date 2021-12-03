@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-// MARK: List of languages
+// MARK: List of languages and Units
 enum Language: String, CaseIterable, Identifiable {
     case en = "English"
     case ru = "Russian"
@@ -38,49 +38,40 @@ struct SettingsView: View {
     @State private var units = Units.metric
     @State private var language = Language.en
     
+    // TODO: Real language and units changing
     var body: some View {
-        // TODO: Set up settings view
-        VStack {
-            List {
-                Section(header: Text("Main")) {
-                    NavigationLink(
-                        destination: CitySearchView(),
-                        label: {
-                            Text("Change city")
+        List {
+            Section(header: Text("Main")) {
+                NavigationLink(
+                    destination: SearchBarView(),
+                    label: {
+                        Text("Change city")
                     })
-                    HStack {
-                        Text("Units")
-                        Spacer()
-                        Picker(selection: $units, label: Text(units.rawValue), content: {
-                            Text("Celsius, metre/s.").tag(Units.metric)
-                            Text("Fahrenheit, miles/h").tag(Units.imperial)
-                        })
-                        .pickerStyle(MenuPickerStyle())
-                    }
-                }
-                Section(header: Text("Other")) {
-                    HStack {
-                        Text("Lanuage")
-                        Spacer()
-                        Picker(selection: $language, label: Text(language.rawValue), content: {
-                            ForEach(Language.allCases) { localLanguage in
-                                Text(localLanguage.rawValue).tag(localLanguage)
-                            }
-                        })
-                        .pickerStyle(MenuPickerStyle())
-                        
-                    }
+                HStack {
+                    Text("Units")
+                    Spacer()
+                    Picker(selection: $units, label: Text(units.rawValue), content: {
+                        Text("Celsius, metre/s.").tag(Units.metric)
+                        Text("Fahrenheit, miles/h").tag(Units.imperial)
+                    })
+                    .pickerStyle(MenuPickerStyle())
                 }
             }
-            .navigationTitle("Settings")
-            .listStyle(InsetGroupedListStyle())
-            Button(action: {
-                print(self.language.cleanValue)
-                print(self.units.cleanValue)
-            }, label: {
-                /*@START_MENU_TOKEN@*/Text("Button")/*@END_MENU_TOKEN@*/
-            })
+            Section(header: Text("Other")) {
+                HStack {
+                    Text("Lanuage")
+                    Spacer()
+                    Picker(selection: $language, label: Text(language.rawValue), content: {
+                        ForEach(Language.allCases) { localLanguage in
+                            Text(localLanguage.rawValue).tag(localLanguage)
+                        }
+                    })
+                    .pickerStyle(MenuPickerStyle())
+                }
+            }
         }
+        .navigationTitle("Settings")
+        .listStyle(InsetGroupedListStyle())
     }
 }
 

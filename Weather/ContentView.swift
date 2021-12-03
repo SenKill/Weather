@@ -8,8 +8,11 @@
 import SwiftUI
 
 struct ContentView: View {
+    @ObservedObject private var viewModel = WeatherMainViewModel()
+    
     var body: some View {
         WeatherMainView()
+            .environmentObject(self.viewModel)
     }
 }
 
