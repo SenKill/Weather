@@ -9,15 +9,18 @@ import SwiftUI
 
 struct DemoNavigateFromMenu: View {
     @State private var language = Language.en
+    @State private var countries: [LocationItems] = []
     
     var body: some View {
         VStack {
-            Text(language.cleanValue)
-            Button(action: {
-                language = .ru
-            }, label: {
-                Text(language.rawValue)
-            })
+            List(countries) { country in
+                Text(country.title)
+            }
+            .onAppear {
+                LocationData().getCountries(language: language.rawValue) { (countries) in
+                    self.countries = countries
+                }
+            }
         }
     }
 }

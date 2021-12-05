@@ -35,6 +35,7 @@ enum Units: String {
 }
 
 struct SettingsView: View {
+    @ObservedObject private var viewModel = SettingsViewModel()
     @State private var units = Units.metric
     @State private var language = Language.en
     
@@ -43,7 +44,7 @@ struct SettingsView: View {
         List {
             Section(header: Text("Main")) {
                 NavigationLink(
-                    destination: SearchBarView(),
+                    destination: SearchBarView(searchText: $viewModel.searchText),
                     label: {
                         Text("Change city")
                     })
