@@ -14,4 +14,5 @@ extension Color {
 
 class ColorTheme {
     let background = Color("BackgroundColor")
+    let defaultBackground = Color("DefaultBackground")
 }

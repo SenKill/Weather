@@ -34,12 +34,14 @@ final class WeatherMainViewModel: ObservableObject {
     @Published var lat: Double?
     @Published var lon: Double?
     
-
-    
     @ObservedObject private var locationManager = LocationManager()
     
+    init() {
+        getCoordinates()
+    }
+    
     func bindWeatherData() {
-        Data().getData(latitude: String(self.lat!), longtitude: String(self.lon!)) { (data) in
+        WeatherData().getData(latitude: String(self.lat!), longtitude: String(self.lon!)) { data in
             let timeZone = TimeZone(identifier: data.timezone)
             
             self.currentDate = Double(data.current.dt).getDateCurrent(timeZone: timeZone!)

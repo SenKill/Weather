@@ -86,7 +86,7 @@ struct HourlyWeather: Codable {
     let pop: Float
 }
 
-struct WeatherData: Codable {
+struct WeatherModel: Codable {
     var lat: Float
     var lon: Float
     var timezone: String
@@ -97,17 +97,27 @@ struct WeatherData: Codable {
     var daily: [DailyWeather]
 }
 
-final class Data {
-    func getData(latitude: String, longtitude: String, completion: @escaping (WeatherData) -> ()) {
+final class WeatherData {
+    func getData(latitude: String, longtitude: String, completion: @escaping (WeatherModel) -> ()) {
         guard let url = URL(string: "https://api.openweathermap.org/data/2.5/onecall?lat=\(latitude)&lon=\(longtitude)&exclude=minutely,alerts&units=metric&appid=a0c0a6cb62d01e7faf2d0aa659b1b981") else {
             print("Wrong URL")
             return }
         
-        URLSession.shared.dataTask(with: url) { (data, _, _) in
-            let weatherData = try! JSONDecoder().decode(WeatherData.self, from: data!)
+        URLSession.shared.dataTask(with: url) { (data, responce, error) in
+            if let error = error {
+                print("Error with getting weather data: \(error.localizedDescription)")
+            }
             
-            DispatchQueue.main.async {
-                completion(weatherData)
+            guard let httpResopnce = responce as? HTTPURLResponse,(200...299).contains(httpResopnce.statusCode) else {
+                print("Error with responce(WeatherData), status code: \(responce!)")
+                return
+            }
+            
+            if let data = data {
+                let weatherData = try! JSONDecoder().decode(WeatherModel.self, from: data)
+                DispatchQueue.main.async {
+                    completion(weatherData)
+                }
             }
         }
         .resume()

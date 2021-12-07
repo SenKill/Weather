@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SearchBarView: View {
     @Binding var searchText: String
+    @Binding var isTapX: Bool
     
     var body: some View {
         HStack {
@@ -17,7 +18,7 @@ struct SearchBarView: View {
                     searchText.isEmpty ?
                         Color.secondary : Color.primary
                 )
-            TextField("Search your city by name...", text: $searchText)
+            TextField("Write location here...", text: $searchText)
                 .disableAutocorrection(true)
                 .foregroundColor(Color.primary)
                 .overlay(
@@ -29,29 +30,30 @@ struct SearchBarView: View {
                         .onTapGesture {
                             UIApplication.shared.endEditing()
                             searchText = ""
+                            isClickedX.toggle()
                         }
                     ,alignment: .trailing
                 )
         }
         .font(.headline)
-        .padding()
+        .frame(maxWidth: .infinity)
+        .padding(15)
         .background(
-            RoundedRectangle(cornerRadius: 25)
-                .fill(Color.theme.background)
+            RoundedRectangle(cornerRadius: 50)
+                .fill(Color.theme.defaultBackground)
                 .shadow(
                     color: Color.primary.opacity(0.2),
-                    radius: 5, x: 0, y: 0)
+                    radius: 3, x: 0, y: 0)
         )
-        .padding()
     }
 }
 
 struct CitySearchView_Previews: PreviewProvider {
     static var previews: some View {
-        SearchBarView(searchText: .constant(""))
+        SearchBarView(searchText: .constant(""), isTapX: .constant(false))
             .previewLayout(.sizeThatFits)
             .preferredColorScheme(.light)
-        SearchBarView(searchText: .constant(""))
+        SearchBarView(searchText: .constant(""), isTapX: .constant(false))
             .previewLayout(.sizeThatFits)
             .preferredColorScheme(.dark)
     }

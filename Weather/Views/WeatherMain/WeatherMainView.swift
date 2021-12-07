@@ -19,10 +19,11 @@ struct WeatherMainView: View {
     
     @EnvironmentObject private var viewModel: WeatherMainViewModel
     
+
+    
     var body: some View {
         if viewModel.lat == 0.0 || viewModel.lon == nil {
             LoadingScreen()
-                .onAppear(perform: viewModel.getCoordinates)
         } else if viewModel.cityName == nil {
             LoadingScreen()
                 .onAppear(perform: viewModel.bindWeatherData)
