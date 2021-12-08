@@ -1,5 +1,5 @@
 //
-//  LocationView.swift
+//  CountrySelectorView.swift
 //  Weather
 //
 //  Created by Serik Musaev on 12/4/21.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct LocationView: View {
+struct CountrySelectorView: View {
     @ObservedObject private var viewModel = LocationViewModel()
     
     init() {
@@ -21,7 +21,7 @@ struct LocationView: View {
                 SearchBarView(searchText: $viewModel.searchText)
                     .padding([.top, .leading, .trailing], 15)
                 List(viewModel.countries) { country in
-                    Text(country.title)
+                    NavigationLink(destination: CitySelectorView(country: country.title), label: { Text(country.region ?? "Netu") })
                 }
             }
         }
@@ -29,8 +29,8 @@ struct LocationView: View {
     }
 }
 
-struct LocationView_Previews: PreviewProvider {
+struct CountrySelectorView_Previews: PreviewProvider {
     static var previews: some View {
-        LocationView()
+        CountrySelectorView()
     }
 }

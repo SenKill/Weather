@@ -37,14 +37,14 @@ struct WeatherMainView: View {
                         Image(viewModel.currentWeather!.icon + "b")
                             .resizable()
                             .scaledToFit()
-                            // .blur(radius: 2)
+                            .blur(radius: 1)
                             .offset(x: 200, y: -125)
                     }
                     VStack {
                         VStack {
                             HStack {
                                 VStack {
-                                    Text(viewModel.currentDate!) // Current date
+                                    Text(viewModel.currentDate!)
                                     Text(viewModel.cityName!)
                                         .font(.title3)
                                         .fontWeight(.medium)

@@ -38,11 +38,11 @@ struct SearchBarView: View {
         .frame(maxWidth: .infinity)
         .padding(8)
         .background(
-            RoundedRectangle(cornerRadius: 75)
+            RoundedRectangle(cornerRadius: 25)
                 .fill(Color.theme.defaultBackground)
                 .shadow(
-                    color: Color.primary.opacity(0.2),
-                    radius: 3, x: 0, y: 0)
+                    color: Color.primary.opacity(0.15),
+                    radius: 10, x: 0, y: 0)
         )
     }
 }

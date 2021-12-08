@@ -43,7 +43,7 @@ struct SettingsView: View {
         List {
             Section(header: Text("Main")) {
                 NavigationLink(
-                    destination: LocationView(),
+                    destination: CountrySelectorView(),
                     label: {
                         Text("Change city")
                     })
