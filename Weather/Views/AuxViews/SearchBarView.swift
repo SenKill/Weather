@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SearchBarView: View {
     @Binding var searchText: String
-    @Binding var isTapX: Bool
     
     var body: some View {
         HStack {
@@ -30,16 +29,16 @@ struct SearchBarView: View {
                         .onTapGesture {
                             UIApplication.shared.endEditing()
                             searchText = ""
-                            isClickedX.toggle()
                         }
                     ,alignment: .trailing
                 )
         }
+        // MARK: Search bar cusomization
         .font(.headline)
         .frame(maxWidth: .infinity)
-        .padding(15)
+        .padding(8)
         .background(
-            RoundedRectangle(cornerRadius: 50)
+            RoundedRectangle(cornerRadius: 75)
                 .fill(Color.theme.defaultBackground)
                 .shadow(
                     color: Color.primary.opacity(0.2),
@@ -50,10 +49,10 @@ struct SearchBarView: View {
 
 struct CitySearchView_Previews: PreviewProvider {
     static var previews: some View {
-        SearchBarView(searchText: .constant(""), isTapX: .constant(false))
+        SearchBarView(searchText: .constant(""))
             .previewLayout(.sizeThatFits)
             .preferredColorScheme(.light)
-        SearchBarView(searchText: .constant(""), isTapX: .constant(false))
+        SearchBarView(searchText: .constant(""))
             .previewLayout(.sizeThatFits)
             .preferredColorScheme(.dark)
     }

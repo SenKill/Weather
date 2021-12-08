@@ -11,8 +11,9 @@ import Combine
 class LocationViewModel: ObservableObject {
     
     @Published var countries: [LocationItems] = []
+    @Published var allCountries: [LocationItems] = []
+    
     @Published var searchText: String = ""
-    @Published var isTapX: Bool = false
     
     private let locationData = LocationData()
     private var cancellables = Set<AnyCancellable>()
@@ -24,15 +25,15 @@ class LocationViewModel: ObservableObject {
     func getCountriesData(lang: String) {
         locationData.getCountries(language: lang) { countries in
             self.countries = countries
+            self.allCountries = countries
         }
     }
     
     func addSubscribers() {
-        // Updates all countries
-        // TODO: Fix filtering
+        // Updates countries
         $searchText
-            .combineLatest($countries)
-            .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
+            .combineLatest($allCountries)
+            .debounce(for: .seconds(0.2), scheduler: DispatchQueue.main)
             .map(filterCountries)
             .sink { [weak self] (returnedCountries) in
                 self?.countries = returnedCountries

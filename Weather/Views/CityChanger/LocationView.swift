@@ -10,23 +10,22 @@ import SwiftUI
 struct LocationView: View {
     @ObservedObject private var viewModel = LocationViewModel()
     
+    init() {
+        // User defaults language settings
+        viewModel.getCountriesData(lang: "en")
+    }
+    
     var body: some View {
         ZStack {
-            /*Color.theme.background
-                .ignoresSafeArea()*/
             VStack {
-                SearchBarView(searchText: $viewModel.searchText, isTapX: $viewModel.isTapX)
-                    .padding()
+                SearchBarView(searchText: $viewModel.searchText)
+                    .padding([.top, .leading, .trailing], 15)
                 List(viewModel.countries) { country in
                     Text(country.title)
                 }
             }
-            .onAppear {
-                viewModel.getCountriesData(lang: "en")
-            }
         }
-        .navigationTitle("Select country")
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitle("Select country", displayMode: .automatic)
     }
 }
 
