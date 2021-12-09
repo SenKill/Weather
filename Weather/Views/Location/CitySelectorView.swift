@@ -7,21 +7,27 @@
 
 import SwiftUI
 
-struct CitySelectorView: View {
-    let country: String
-    
-    init(country: String) {
-        self.country = country
-        print("Initializing\(country)")
-    }
+struct CitySelectorLoadingView: View {
+    @Binding var country: Country?
     
     var body: some View {
-        Text(country)
+        ZStack {
+            if let country = country {
+                CitySelectorView(country: country)
+            }
+        }
     }
 }
 
-struct CitySelectorView_Previews: PreviewProvider {
-    static var previews: some View {
-        CitySelectorView(country: "Kazakhstan")
+struct CitySelectorView: View {
+    let country: Country
+    
+    init(country: Country) {
+        self.country = country
+        print("Initializing \(country.title)")
+    }
+    
+    var body: some View {
+        Text(country.title)
     }
 }

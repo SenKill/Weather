@@ -24,9 +24,9 @@ struct WeatherMainView: View {
     var body: some View {
         if viewModel.lat == 0.0 || viewModel.lon == nil {
             LoadingScreen()
-        } else if viewModel.cityName == nil {
+        } else if viewModel.cityName.isEmpty {
             LoadingScreen()
-                .onAppear(perform: viewModel.bindWeatherData)
+                .onAppear { viewModel.bindWeatherData(lat: viewModel.lat!, lon: viewModel.lon!) } 
         } else {
             NavigationView {
                 ZStack {
@@ -34,7 +34,7 @@ struct WeatherMainView: View {
                         .ignoresSafeArea()
                     ZStack {
                         // MARK: Background Image
-                        Image(viewModel.currentWeather!.icon + "b")
+                        Image(viewModel.current!.weather[0].icon + "b")
                             .resizable()
                             .scaledToFit()
                             .blur(radius: 1)
@@ -44,8 +44,8 @@ struct WeatherMainView: View {
                         VStack {
                             HStack {
                                 VStack {
-                                    Text(viewModel.currentDate!)
-                                    Text(viewModel.cityName!)
+                                    Text(Double(viewModel.current!.dt).getDateCurrent(timeZone: viewModel.timeZone!))
+                                    Text(viewModel.cityName)
                                         .font(.title3)
                                         .fontWeight(.medium)
                                 }
@@ -62,7 +62,7 @@ struct WeatherMainView: View {
                             }
                             .padding()
                             HStack {
-                                Text(viewModel.currentTemperature!)
+                                Text(viewModel.current!.temp.tempToString())
                                     .font(.system(size: 80,
                                                   weight: .semibold,
                                                   design: .default))
@@ -70,9 +70,9 @@ struct WeatherMainView: View {
                                     .frame(width: 3, height: 100, alignment: .center)
                                 VStack(alignment: .leading) {
                                     Group {
-                                        Text(viewModel.currentWeather!.description)
-                                        Text("H: \(String(format: "%.0f" ,viewModel.dailyTemperature[0].max))º")
-                                        Text("L: \(String(format: "%.0f" ,viewModel.dailyTemperature[0].min))º")
+                                        Text(viewModel.current!.weather[0].description)
+                                        Text("H:" + viewModel.daily[0].temp.max.tempToString())
+                                        Text("L:" + viewModel.daily[0].temp.min.tempToString())
                                     }
                                     .font(.system(size: 20, weight: .medium, design: .default))
                                     .padding(2)
@@ -94,10 +94,10 @@ struct WeatherMainView: View {
                                     .padding(0.5)
                                     .foregroundColor(Color.secondary)
                                     VStack(alignment: .leading) {
-                                        Text("\(viewModel.currentWind!)m/s")
-                                        Text("\(viewModel.currentHumidity!)%")
-                                        Text("\(viewModel.currentTemperatureFeels!)º")
-                                        Text("\(viewModel.currentPressure!)mbar")
+                                        Text(viewModel.current!.wind_speed.windToString())
+                                        Text("\(viewModel.current!.humidity)%")
+                                        Text(viewModel.current!.feels_like.tempToString())
+                                        Text("\(viewModel.current!.pressure)mbar")
                                     }
                                     .font(.title3)
                                     .padding(0.5)
@@ -114,9 +114,9 @@ struct WeatherMainView: View {
                     }
                 }
                 .foregroundColor(Color.primary)
-                .navigationBarTitle("Back")
                 .navigationBarHidden(true)
             }
+            .navigationViewStyle(StackNavigationViewStyle())
         }
     }
 }

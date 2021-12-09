@@ -13,18 +13,18 @@ struct DailyForecastView: View {
     var body: some View {
         // TODO: Create another view and window for dailyForecast
         ScrollView(.vertical, showsIndicators: false) {
-            ForEach(0 ..< viewModel.dailyWeather.count) { column in
+            ForEach(0 ..< viewModel.daily.count) { column in
                 ZStack(alignment: .center) {
                     HStack {
-                        Text(viewModel.dailyDate[column])
+                        Text(Double(viewModel.daily[column].dt).getDateDaily(timeZone: viewModel.timeZone!))
                         Spacer()
                         HStack {
-                            Text("\(String(format: "%.0f",viewModel.dailyTemperature[column].day))°")
-                            Text("\(String(format: "%.0f",viewModel.dailyTemperature[column].night))°")
+                            Text(viewModel.daily[column].temp.day.tempToString())
+                            Text(viewModel.daily[column].temp.night.tempToString())
                                 .foregroundColor(Color.secondary)
                         }
                     }
-                    Image(viewModel.dailyWeather[column].icon)
+                    Image(viewModel.daily[column].weather[0].icon)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 40, height: 40)

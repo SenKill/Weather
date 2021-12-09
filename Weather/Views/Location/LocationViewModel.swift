@@ -10,8 +10,8 @@ import Combine
 
 class LocationViewModel: ObservableObject {
     
-    @Published var countries: [LocationItems] = []
-    @Published var allCountries: [LocationItems] = []
+    @Published var countries: [Country] = []
+    @Published var allCountries: [Country] = []
     
     @Published var searchText: String = ""
     
@@ -41,7 +41,7 @@ class LocationViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    private func filterCountries(text: String, countries: [LocationItems]) -> [LocationItems] {
+    private func filterCountries(text: String, countries: [Country]) -> [Country] {
         guard !text.isEmpty else {
             return countries
         }

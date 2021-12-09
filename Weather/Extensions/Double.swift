@@ -32,3 +32,4 @@ extension Double {
         return dateFormatter.string(from: date)
     }
 }
+

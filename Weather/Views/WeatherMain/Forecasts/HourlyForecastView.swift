@@ -13,16 +13,16 @@ struct HourlyForecastView: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
-                ForEach(0 ..< viewModel.hourlyWeather.count) { column in
+                ForEach(0 ..< viewModel.hourly.count) { column in
                     VStack(alignment: .center) {
-                        Text(viewModel.hourlyDate[column])
-                        Image(viewModel.hourlyWeather[column].icon)
+                        Text(Double(viewModel.hourly[column].dt).getDateHourly(timeZone: viewModel.timeZone!))
+                        Image(viewModel.hourly[column].weather[0].icon)
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 60, height: 60, alignment: .center)
-                        Text("\(String(format: "%.0f" ,viewModel.hourlyTemperature[column]))º")
+                        Text(viewModel.hourly[column].temp.tempToString())
                             .font(.title3)
-                        Text("\(String(format: "%.1f" ,viewModel.hourlyWind[column]))m/s")
+                        Text(viewModel.hourly[column].wind_speed.windToString())
                     }
                     .padding(10)
                 }

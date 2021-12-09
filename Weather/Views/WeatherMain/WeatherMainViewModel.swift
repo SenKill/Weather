@@ -12,24 +12,12 @@ import CoreLocation
 
 // TODO: Save latest data to UserDefaults or CoreData
 final class WeatherMainViewModel: ObservableObject {
-    @Published var cityName: String?
-    @Published var currentDate: String?
-    @Published var currentTemperature: String?
-    @Published var currentWeather: WeatherDescription?
-    @Published var currentWind: String?
-    @Published var currentHumidity: Int?
-    @Published var currentTemperatureFeels: String?
-    @Published var currentPressure: Int?
+    @Published var timeZone: TimeZone?
+    @Published var cityName: String = ""
     
-    @Published var hourlyDate: [String] = []
-    @Published var hourlyTemperature: [Float] = []
-    @Published var hourlyWeather: [WeatherDescription] = []
-    @Published var hourlyWind: [Float] = []
-    
-    @Published var dailyDate: [String] = []
-    @Published var dailyTemperature: [Temperature] = []
-    @Published var dailyWeather: [WeatherDescription] = []
-    @Published var dailyWind: [Float] = []
+    @Published var current: CurrentWeather?
+    @Published var hourly: [HourlyWeather] = []
+    @Published var daily: [DailyWeather] = []
     
     @Published var lat: Double?
     @Published var lon: Double?
@@ -40,34 +28,15 @@ final class WeatherMainViewModel: ObservableObject {
         getCoordinates()
     }
     
-    func bindWeatherData() {
-        WeatherData().getData(latitude: String(self.lat!), longtitude: String(self.lon!)) { data in
-            let timeZone = TimeZone(identifier: data.timezone)
-            
-            self.currentDate = Double(data.current.dt).getDateCurrent(timeZone: timeZone!)
-            self.currentTemperature = String(format: "%.0f", data.current.temp)
-            self.currentTemperature?.append("º")
-            self.currentWeather = data.current.weather[0]
-            self.currentWind = String(format: "%.1f", data.current.wind_speed)
-            self.currentHumidity = data.current.humidity
-            self.currentTemperatureFeels = String(format: "%.0f", data.current.feels_like)
-            self.currentPressure = data.current.pressure
+    func bindWeatherData(lat: Double, lon: Double) {
+        WeatherData().getData(latitude: String(lat), longtitude: String(lon)) { data in
+            self.timeZone = TimeZone(identifier: data.timezone)
                     
-            self.coordinatesToCity(lat: self.lat!, lon: self.lon!)
+            self.current = data.current
+            self.hourly = data.hourly
+            self.daily = data.daily
             
-            for i in 0 ..< data.hourly.count {
-                self.hourlyDate.append(Double(data.hourly[i].dt).getDateHourly(timeZone: timeZone!))
-                self.hourlyTemperature.append(data.hourly[i].temp)
-                self.hourlyWeather.append(contentsOf: data.hourly[i].weather)
-                self.hourlyWind.append(data.hourly[i].wind_speed)
-            }
-            
-            for i in 0 ..< data.daily.count {
-                self.dailyDate.append(Double(data.daily[i].dt).getDateDaily(timeZone: timeZone!))
-                self.dailyTemperature.append(data.daily[i].temp)
-                self.dailyWeather.append(contentsOf: data.daily[i].weather)
-                self.dailyWind.append(data.daily[i].wind_speed)
-            }
+            self.coordinatesToCity(lat: lat, lon: lon)
         }
     }
     

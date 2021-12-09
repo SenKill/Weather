@@ -7,25 +7,41 @@
 
 import Foundation
 
-struct LocationItems: Codable, Identifiable {
+struct CountryModel: Codable {
+    let response: CountryResponse
+}
+
+struct CountryResponse: Codable {
+    var count: Int
+    var items: [Country]
+}
+
+struct Country: Codable, Identifiable {
     let id: Int
     let title: String
     let area: String?
     let region: String?
 }
 
-struct Response: Codable {
-    var count: Int
-    var items: [LocationItems]
+
+struct CityModel: Codable {
+    let responce: CityResponce
 }
 
-struct LocationModel: Codable {
-    let response: Response
+struct CityResponce: Codable {
+    var count: Int
+    var items: [City]
 }
+
+struct City: Codable, Identifiable {
+    let id: Int
+}
+
+
 
 final class LocationData {
     let accessToken = Tokens.vkAPI.rawValue
-    func getCountries(language: String, completion: @escaping ([LocationItems]) -> ()) {
+    func getCountries(language: String, completion: @escaping ([Country]) -> ()) {
         guard let url = URL(string: "https://api.vk.com/method/database.getCountries?access_token=\(accessToken)&need_all=1&count=1000&lang=\(language)&v=5.131") else {
             print("Wrong url")
             return }
@@ -43,7 +59,7 @@ final class LocationData {
             }
             
             if let someData = data {
-                let locationData = try! JSONDecoder().decode(LocationModel.self, from: someData)
+                let locationData = try! JSONDecoder().decode(CountryModel.self, from: someData)
                 DispatchQueue.main.async {
                     completion(locationData.response.items)
                 }
@@ -52,16 +68,16 @@ final class LocationData {
         .resume()
     }
     
-    func getCities(language: String, countryId: String, query: String, count: String, completion: @escaping (LocationModel) -> ()) {
+    func getCities(language: String, countryId: String, query: String, count: String, completion: @escaping ([City]) -> ()) {
         guard let url = URL(string: "https://api.vk.com/method/database.getCities?access_token=\(accessToken)&country_id=\(countryId)&q=\(query)&need_all=1&count=\(count)&lang=\(language)&v=5.131") else {
             print("Wrong url")
             return }
         
         URLSession.shared.dataTask(with: url) { (data, _, _) in
-            let locationData = try! JSONDecoder().decode(LocationModel.self, from: data!)
+            let locationData = try! JSONDecoder().decode(CityModel.self, from: data!)
             
             DispatchQueue.main.async {
-                completion(locationData)
+                completion(locationData.responce.items)
             }
         }
         .resume()

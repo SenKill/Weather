@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct CountrySelectorView: View {
-    @ObservedObject private var viewModel = LocationViewModel()
+    @ObservedObject private var viewModel: LocationViewModel = LocationViewModel()
+    
+    @State private var showCityView: Bool = false
+    @State private var selectedCountry: Country? = nil
     
     init() {
         // User defaults language settings
@@ -16,16 +19,34 @@ struct CountrySelectorView: View {
     }
     
     var body: some View {
-        ZStack {
-            VStack {
-                SearchBarView(searchText: $viewModel.searchText)
-                    .padding([.top, .leading, .trailing], 15)
-                List(viewModel.countries) { country in
-                    NavigationLink(destination: CitySelectorView(country: country.title), label: { Text(country.region ?? "Netu") })
-                }
+        VStack {
+            SearchBarView(searchText: $viewModel.searchText)
+                .padding([.top, .leading, .trailing], 15)
+            List(viewModel.countries) { country in
+                Text(country.title)
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        Color.theme.defaultBackground
+                    )
+                    .onTapGesture {
+                        segue(country: country)
+                    }
             }
         }
-        .navigationBarTitle("Select country", displayMode: .automatic)
+        .navigationTitle("Select country")
+        .navigationBarTitleDisplayMode(.automatic)
+        .background(
+            NavigationLink(
+                destination: CitySelectorLoadingView(country: $selectedCountry),
+                isActive: $showCityView,
+                label: { EmptyView() }
+            )
+        )
+    }
+    
+    private func segue(country: Country) {
+        selectedCountry = country
+        showCityView.toggle()
     }
 }
 
