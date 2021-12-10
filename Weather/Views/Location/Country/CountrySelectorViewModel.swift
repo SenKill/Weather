@@ -1,5 +1,5 @@
 //
-//  LocationViewModel.swift
+//  CountrySelectorViewModel.swift
 //  Weather
 //
 //  Created by Serik Musaev on 12/7/21.
@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class LocationViewModel: ObservableObject {
+class CountrySelectorViewModel: ObservableObject {
     
     @Published var countries: [Country] = []
     @Published var allCountries: [Country] = []
@@ -20,6 +20,7 @@ class LocationViewModel: ObservableObject {
     
     init() {
         addSubscribers()
+        getCountriesData(lang: "en")
     }
     
     func getCountriesData(lang: String) {

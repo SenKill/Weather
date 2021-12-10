@@ -8,15 +8,10 @@
 import SwiftUI
 
 struct CountrySelectorView: View {
-    @ObservedObject private var viewModel: LocationViewModel = LocationViewModel()
+    @ObservedObject private var viewModel: CountrySelectorViewModel = CountrySelectorViewModel()
     
     @State private var showCityView: Bool = false
     @State private var selectedCountry: Country? = nil
-    
-    init() {
-        // User defaults language settings
-        viewModel.getCountriesData(lang: "en")
-    }
     
     var body: some View {
         VStack {
@@ -37,7 +32,7 @@ struct CountrySelectorView: View {
         .navigationBarTitleDisplayMode(.automatic)
         .background(
             NavigationLink(
-                destination: CitySelectorLoadingView(country: $selectedCountry),
+                destination: CitySelectorLoadingView(country: selectedCountry),
                 isActive: $showCityView,
                 label: { EmptyView() }
             )

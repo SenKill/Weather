@@ -19,8 +19,6 @@ struct CountryResponse: Codable {
 struct Country: Codable, Identifiable {
     let id: Int
     let title: String
-    let area: String?
-    let region: String?
 }
 
 
@@ -35,6 +33,10 @@ struct CityResponce: Codable {
 
 struct City: Codable, Identifiable {
     let id: Int
+    let title: String
+    let area: String?
+    let region: String?
+    let important: Int?
 }
 
 
@@ -69,7 +71,7 @@ final class LocationData {
     }
     
     func getCities(language: String, countryId: String, query: String, count: String, completion: @escaping ([City]) -> ()) {
-        guard let url = URL(string: "https://api.vk.com/method/database.getCities?access_token=\(accessToken)&country_id=\(countryId)&q=\(query)&need_all=1&count=\(count)&lang=\(language)&v=5.131") else {
+        guard let url = URL(string: "https://api.vk.com/method/database.getCities?access_token=\(accessToken)&country_id=\(countryId)\(query)&need_all=1&count=\(count)&lang=\(language)&v=5.131") else {
             print("Wrong url")
             return }
         

@@ -1,5 +1,5 @@
 //
-//  LoadingScreen.swift
+//  LoadingView.swift
 //  Weather
 //
 //  Created by Serik Musaev on 11/3/21.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct LoadingScreen: View {
+struct LoadingView: View {
     var body: some View {
         ZStack {
             Color(.systemBackground)
@@ -20,8 +20,8 @@ struct LoadingScreen: View {
     }
 }
 
-struct LoadingScreen_Previews: PreviewProvider {
+struct LoadingView_Previews: PreviewProvider {
     static var previews: some View {
-        LoadingScreen()
+        LoadingView()
     }
 }
