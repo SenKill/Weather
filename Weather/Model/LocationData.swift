@@ -12,8 +12,8 @@ struct CountryModel: Codable {
 }
 
 struct CountryResponse: Codable {
-    var count: Int
-    var items: [Country]
+    let count: Int
+    let items: [Country]
 }
 
 struct Country: Codable, Identifiable {
@@ -23,12 +23,12 @@ struct Country: Codable, Identifiable {
 
 
 struct CityModel: Codable {
-    let responce: CityResponce
+    let response: CityResponce
 }
 
 struct CityResponce: Codable {
-    var count: Int
-    var items: [City]
+    let count: Int
+    let items: [City]
 }
 
 struct City: Codable, Identifiable {
@@ -75,11 +75,23 @@ final class LocationData {
             print("Wrong url")
             return }
         
-        URLSession.shared.dataTask(with: url) { (data, _, _) in
-            let locationData = try! JSONDecoder().decode(CityModel.self, from: data!)
+        URLSession.shared.dataTask(with: url) { (data, responce, error) in
+            if let error = error {
+                print("Error with getting countries: \(error.localizedDescription)")
+                return
+            }
             
-            DispatchQueue.main.async {
-                completion(locationData.responce.items)
+            guard let httpResponse = responce as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                print("Error with the response(LocationData), status code: \(responce!)")
+                return
+            }
+            
+            if let someData = data {
+                let locationData = try! JSONDecoder().decode(CityModel.self, from: someData)
+                DispatchQueue.main.async {
+                    completion(locationData.response.items)
+                }
             }
         }
         .resume()
