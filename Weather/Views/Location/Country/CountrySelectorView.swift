@@ -11,12 +11,11 @@ struct CountrySelectorView: View {
     @ObservedObject private var viewModel: CountrySelectorViewModel = CountrySelectorViewModel()
     
     @State private var showCityView: Bool = false
-    @State private var selectedCountry: Country? = nil
+    @State private var selectedCountry: Country?
     
     var body: some View {
         VStack {
             SearchBarView(searchText: $viewModel.searchText)
-                .padding([.top, .leading, .trailing], 15)
             List(viewModel.countries) { country in
                 Text(country.title)
                     .frame(maxWidth: .infinity)

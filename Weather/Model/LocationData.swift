@@ -31,7 +31,7 @@ struct CityResponce: Codable {
     let items: [City]
 }
 
-struct City: Codable, Identifiable {
+struct City: Codable, Identifiable, Equatable {
     let id: Int
     let title: String
     let area: String?
@@ -48,22 +48,26 @@ final class LocationData {
             print("Wrong url")
             return }
         
-        URLSession.shared.dataTask(with: url) { (data, responce, error) in
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
             if let error = error {
                 print("Error with getting countries: \(error.localizedDescription)")
                 return
             }
             
-            guard let httpResponse = responce as? HTTPURLResponse,
+            guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode) else {
-                print("Error with the response(LocationData), status code: \(responce!)")
+                print("Error with the response(LocationData), status code: \(response!)")
                 return
             }
             
             if let someData = data {
-                let locationData = try! JSONDecoder().decode(CountryModel.self, from: someData)
-                DispatchQueue.main.async {
-                    completion(locationData.response.items)
+                do {
+                    let locationData = try JSONDecoder().decode(CountryModel.self, from: someData)
+                    DispatchQueue.main.async {
+                        completion(locationData.response.items)
+                    }
+                } catch {
+                    print(error)
                 }
             }
         }
@@ -71,26 +75,30 @@ final class LocationData {
     }
     
     func getCities(language: String, countryId: String, query: String, count: String, completion: @escaping ([City]) -> ()) {
-        guard let url = URL(string: "https://api.vk.com/method/database.getCities?access_token=\(accessToken)&country_id=\(countryId)\(query)&need_all=1&count=\(count)&lang=\(language)&v=5.131") else {
+        guard let url = URL(string: "https://api.vk.com/method/database.getCities?access_token=\(accessToken)&country_id=\(countryId)\(query)&need_all=0&count=\(count)&lang=\(language)&v=5.131") else {
             print("Wrong url")
             return }
         
-        URLSession.shared.dataTask(with: url) { (data, responce, error) in
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
             if let error = error {
                 print("Error with getting countries: \(error.localizedDescription)")
                 return
             }
             
-            guard let httpResponse = responce as? HTTPURLResponse,
+            guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode) else {
-                print("Error with the response(LocationData), status code: \(responce!)")
+                print("Error with the response(LocationData), status code: \(response!)")
                 return
             }
             
             if let someData = data {
-                let locationData = try! JSONDecoder().decode(CityModel.self, from: someData)
-                DispatchQueue.main.async {
-                    completion(locationData.response.items)
+                do {
+                    let locationData = try JSONDecoder().decode(CityModel.self, from: someData)
+                    DispatchQueue.main.async {
+                        completion(locationData.response.items)
+                    }
+                } catch {
+                    print(error)
                 }
             }
         }
