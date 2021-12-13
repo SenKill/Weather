@@ -13,7 +13,7 @@ class CountrySelectorViewModel: ObservableObject {
     @Published var countries: [Country] = []
     @Published var allCountries: [Country] = []
     
-    @Published var searchText: String = ""
+    @Published var countrySearchText: String = ""
     
     private let locationData = LocationData()
     private var cancellables = Set<AnyCancellable>()
@@ -32,7 +32,7 @@ class CountrySelectorViewModel: ObservableObject {
     
     func addSubscribers() {
         // Updates countries
-        $searchText
+        $countrySearchText
             .combineLatest($allCountries)
             .debounce(for: .seconds(0.2), scheduler: DispatchQueue.main)
             .map(filterCountries)

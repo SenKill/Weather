@@ -75,9 +75,9 @@ final class LocationData {
     }
     
     func getCities(language: String, countryId: String, query: String, count: String, completion: @escaping ([City]) -> ()) {
-        guard let url = URL(string: "https://api.vk.com/method/database.getCities?access_token=\(accessToken)&country_id=\(countryId)\(query)&need_all=0&count=\(count)&lang=\(language)&v=5.131") else {
-            print("Wrong url")
-            return }
+            guard let url = URL(string: "https://api.vk.com/method/database.getCities?access_token=\(accessToken)&country_id=\(countryId)\(query)&need_all=0&count=\(count)&lang=\(language)&v=5.131") else {
+                print("Wrong url")
+                return }
         
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             if let error = error {
@@ -103,5 +103,24 @@ final class LocationData {
             }
         }
         .resume()
+        /*
+        URLSession.shared.dataTaskPublisher(for: url)
+            .subscribe(on: DispatchQueue.global(qos: .background))
+            .receive(on: DispatchQueue.main)
+            .tryMap { (data, response) -> Data in
+                guard let response = response as? HTTPURLResponse,
+                      (200...299).contains(response.statusCode) else {
+                    throw URLError(.badServerResponse)
+                }
+                return data
+            }
+            .decode(type: [City].self, decoder: JSONDecoder())
+            .sink { (completion) in
+                print("COMPLETION: \(completion)")
+            } receiveValue: { [weak self] (returnedCities) in
+                self?.cities = returnedCities
+            }
+            .store(in: &cancellables)
+        */
     }
 }

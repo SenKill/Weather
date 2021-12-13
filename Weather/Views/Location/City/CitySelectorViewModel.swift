@@ -12,7 +12,9 @@ class CitySelectorViewModel: ObservableObject {
     @Published var allCities: [City] = []
     @Published var cities: [City] = []
     private var sortedCities: [City] = []
-    @Published var searchText = ""
+    private var count = 0
+    
+    @Published var citySearchText = ""
     @Published var country: Country?
     
     private let locationData = LocationData()
@@ -23,25 +25,21 @@ class CitySelectorViewModel: ObservableObject {
     }
     
     func getCitiesData(lang: String, id: Int, query: String?, count: Int) {
-        var newQuery = ""
-        if let query = query {
-            newQuery = "&q=" + query
-        }
-        locationData.getCities(language: lang, countryId: String(id), query: newQuery, count: String(count)) { (cities) in
+        locationData.getCities(language: lang, countryId: String(id), query: "", count: String(count)) { (cities) in
             self.allCities = cities
         }
     }
     
     func addSubscribers() {
         // Updates cities
-        $searchText
+        $citySearchText
             .combineLatest($allCities)
-            .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
+            .debounce(for: .seconds(0.7), scheduler: DispatchQueue.main)
             .map(filterCities)
-            .sink { [weak self] (returnedCountries) in
-                if let sortedCities = self?.sortedCities {
-                    self?.cities = sortedCities
-                }
+            .sink {
+                self.count+=1
+                print("Loading cities", self.count)
+                self.cities = self.sortedCities
             }
             .store(in: &cancellables)
     }
@@ -52,7 +50,8 @@ class CitySelectorViewModel: ObservableObject {
             return
         }
         
-        locationData.getCities(language: "en", countryId: String(country!.id), query: text, count: "50") { (cities) in
+        let query = "&q=" + text
+        locationData.getCities(language: "en", countryId: String(country!.id), query: query, count: "50") { (cities) in
             self.sortedCities = cities
         }
     }

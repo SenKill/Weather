@@ -21,7 +21,7 @@ struct CitySelectorLoadingView: View {
     
     var body: some View {
         ZStack {
-            if viewModel.cities != [] {
+            if viewModel.allCities != [] {
                 CitySelectorView(viewModel: viewModel)
             } else {
                 LoadingView()
@@ -35,7 +35,7 @@ struct CitySelectorView: View {
     
     var body: some View {
         VStack {
-            SearchBarView(searchText: $viewModel.searchText)
+            SearchBarView(searchText: $viewModel.citySearchText)
             List(viewModel.cities) { city in
                 Text(city.title)
                     .frame(maxWidth: .infinity)

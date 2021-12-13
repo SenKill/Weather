@@ -15,7 +15,7 @@ struct CountrySelectorView: View {
     
     var body: some View {
         VStack {
-            SearchBarView(searchText: $viewModel.searchText)
+            SearchBarView(searchText: $viewModel.countrySearchText)
             List(viewModel.countries) { country in
                 Text(country.title)
                     .frame(maxWidth: .infinity)
