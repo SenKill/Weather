@@ -9,13 +9,11 @@ import SwiftUI
 
 struct CitySelectorLoadingView: View {
     @ObservedObject private var viewModel = CitySelectorViewModel()
-    let country: Country?
     
     init(country: Country?) {
-        self.country = country
         if let country = country {
             viewModel.country = country
-            viewModel.getCitiesData(lang: "en", id: country.id, query: nil, count: 50)
+            viewModel.getCitiesStart(lang: "en", id: country.id, query: nil, count: 50)
         }
     }
     
@@ -41,9 +39,15 @@ struct CitySelectorView: View {
                     .frame(maxWidth: .infinity)
                     .background(Color.theme.defaultBackground)
             }
-
         }
         .navigationTitle(viewModel.country!.title)
         .navigationBarTitleDisplayMode(.inline)
+        .onDisappear {
+            print(viewModel.country?.title ?? "Some country", "is being dissapear!")
+            for i in viewModel.cityCancellables {
+                i.cancel()
+            }
+            viewModel.cityCancellables.removeAll()
+        }
     }
 }

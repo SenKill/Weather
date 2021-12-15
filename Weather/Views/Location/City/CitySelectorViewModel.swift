@@ -12,47 +12,72 @@ class CitySelectorViewModel: ObservableObject {
     @Published var allCities: [City] = []
     @Published var cities: [City] = []
     private var sortedCities: [City] = []
-    private var count = 0
     
     @Published var citySearchText = ""
     @Published var country: Country?
     
-    private let locationData = LocationData()
-    private var cancellables = Set<AnyCancellable>()
+    var cityCancellables = Set<AnyCancellable>()
+    
+    deinit {
+        print("\(country?.title ?? "some") country is being deinitialized")
+        // cityCancellables.removeAll()
+    }
     
     init() {
         addSubscribers()
     }
     
-    func getCitiesData(lang: String, id: Int, query: String?, count: Int) {
-        locationData.getCities(language: lang, countryId: String(id), query: "", count: String(count)) { (cities) in
-            self.allCities = cities
+    func getCitiesStart(lang: String, id: Int, query: String?, count: Int) {
+        self.getCities(language: lang, countryId: String(id), query: "", count: String(count)) { [weak self] (cities) in
+            self?.allCities = cities
         }
     }
     
-    func addSubscribers() {
+    // TODO: Solve problem with publishers (Maybe problem with the combineLatest)
+    private func addSubscribers() {
         // Updates cities
         $citySearchText
             .combineLatest($allCities)
             .debounce(for: .seconds(0.7), scheduler: DispatchQueue.main)
             .map(filterCities)
-            .sink {
-                self.count+=1
-                print("Loading cities", self.count)
-                self.cities = self.sortedCities
-            }
-            .store(in: &cancellables)
+            .sink{ print("Cities sink") }
+            .store(in: &cityCancellables)
     }
     
     private func filterCities(text: String, cities: [City]) {
         guard !text.isEmpty else {
-            self.sortedCities = cities
+            self.cities = cities
             return
         }
         
         let query = "&q=" + text
-        locationData.getCities(language: "en", countryId: String(country!.id), query: query, count: "50") { (cities) in
-            self.sortedCities = cities
+        self.getCities(language: "en", countryId: String(country!.id), query: query, count: "50") { [weak self] (cities) in
+            self?.cities = cities
         }
+    }
+    
+    private func getCities(language: String, countryId: String, query: String, count: String, completion: @escaping ([City]) -> ()) {
+        guard let url = URL(string: "https://api.vk.com/method/database.getCities?access_token=\(Tokens.vkAPI.rawValue)&country_id=\(countryId)\(query)&need_all=0&count=\(count)&lang=\(language)&v=5.131") else {
+                print("Wrong url")
+                return }
+        
+        URLSession.shared.dataTaskPublisher(for: url)
+            .subscribe(on: DispatchQueue.global(qos: .background))
+            .receive(on: DispatchQueue.main)
+            .tryMap { (data, response) -> Data in
+                guard let response = response as? HTTPURLResponse,
+                      (200...299).contains(response.statusCode) else {
+                    throw URLError(.badServerResponse)
+                }
+                return data
+            }
+            .decode(type: CityModel.self, decoder: JSONDecoder())
+            .sink { (completion) in
+                print("COMPLETION: \(completion)")
+            } receiveValue: { [weak self] (returnedCities) in
+                self?.cities = returnedCities.response.items
+                completion(returnedCities.response.items)
+            }
+            .store(in: &cityCancellables)
     }
 }

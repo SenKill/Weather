@@ -16,7 +16,7 @@ class CountrySelectorViewModel: ObservableObject {
     @Published var countrySearchText: String = ""
     
     private let locationData = LocationData()
-    private var cancellables = Set<AnyCancellable>()
+    private var countryCancellables = Set<AnyCancellable>()
     
     init() {
         addSubscribers()
@@ -25,21 +25,21 @@ class CountrySelectorViewModel: ObservableObject {
     
     func getCountriesData(lang: String) {
         locationData.getCountries(language: lang) { countries in
-            self.countries = countries
             self.allCountries = countries
         }
     }
     
-    func addSubscribers() {
+    private func addSubscribers() {
         // Updates countries
         $countrySearchText
             .combineLatest($allCountries)
-            .debounce(for: .seconds(0.2), scheduler: DispatchQueue.main)
+            .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
             .map(filterCountries)
             .sink { [weak self] (returnedCountries) in
+                print("Countries sink")
                 self?.countries = returnedCountries
             }
-            .store(in: &cancellables)
+            .store(in: &countryCancellables)
     }
     
     private func filterCountries(text: String, countries: [Country]) -> [Country] {
@@ -48,7 +48,8 @@ class CountrySelectorViewModel: ObservableObject {
         }
             
         let lowercasedText = text.lowercased()
-            
+        print("Countries filter")
+        
         return countries.filter { (country) -> Bool in
             return country.title.lowercased().contains(lowercasedText)
         }
