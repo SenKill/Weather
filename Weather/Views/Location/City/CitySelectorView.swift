@@ -31,6 +31,10 @@ struct CitySelectorLoadingView: View {
 struct CitySelectorView: View {
     @ObservedObject var viewModel: CitySelectorViewModel
     
+    @State private var showAlert = false
+    @State private var navigateToMain = false
+    @State private var selectedCity: City?
+    
     var body: some View {
         VStack {
             SearchBarView(searchText: $viewModel.citySearchText)
@@ -38,10 +42,30 @@ struct CitySelectorView: View {
                 Text(city.title)
                     .frame(maxWidth: .infinity)
                     .background(Color.theme.defaultBackground)
+                    .onTapGesture {
+                        selectedCity = city
+                        showAlert.toggle()
+                    }
+            }
+            .alert(isPresented: $showAlert) {
+                Alert(
+                    title: Text("Are you sure?"),
+                    message: Text("You selected city - \(selectedCity?.title ?? "nil"),\n this will update weather and city"),
+                    primaryButton: .default(Text("OK")) {
+                        navigateToMain.toggle()
+                    },
+                    secondaryButton: .cancel()
+                )
             }
         }
         .navigationTitle(viewModel.country!.title)
         .navigationBarTitleDisplayMode(.inline)
+        .background(
+            NavigationLink(
+                destination: WeatherMainLoadingView(city: selectedCity).navigationBarHidden(true),
+                isActive: $navigateToMain,
+                label: { EmptyView() })
+        )
         .onDisappear {
             print(viewModel.country?.title ?? "Some country", "is being dissapear!")
             for i in viewModel.cityCancellables {

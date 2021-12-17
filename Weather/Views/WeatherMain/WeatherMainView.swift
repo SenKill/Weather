@@ -11,16 +11,41 @@ import SwiftUI
 
 struct WeatherMainLoadingView: View {
     @EnvironmentObject private var viewModel: WeatherMainViewModel
+    let city: City?
     
     var body: some View {
-        if viewModel.lat == 0.0 || viewModel.lon == nil {
-            LoadingView()
-        } else if viewModel.cityName.isEmpty {
-            LoadingView()
-                .onAppear { viewModel.bindWeatherData(lat: viewModel.lat!, lon: viewModel.lon!) }
-        } else {
-            WeatherMainView()
-                .environmentObject(self.viewModel)
+        if let city: City = city {
+            if viewModel.coordinate != nil {
+                LoadingView()
+                    .onAppear {
+                        viewModel.coordinate = nil
+                    }
+            }
+            else if viewModel.coordinate == nil {
+                LoadingView()
+                    .onAppear {
+                        viewModel.cityName = ""
+                        viewModel.cityToCoordinates(city: city)
+                    }
+            } else if viewModel.cityName.isEmpty {
+                LoadingView()
+                    .onAppear { viewModel.bindWeatherData(coordinate: viewModel.coordinate!) }
+            } else {
+                WeatherMainView()
+                    .environmentObject(viewModel)
+            }
+        }
+        
+        else {
+            if viewModel.coordinate == nil {
+                LoadingView()
+            } else if viewModel.cityName.isEmpty {
+                LoadingView()
+                    .onAppear { viewModel.bindWeatherData(coordinate: viewModel.coordinate!) }
+            } else {
+                WeatherMainView()
+                    .environmentObject(viewModel)
+            }
         }
     }
 }

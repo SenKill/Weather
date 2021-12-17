@@ -19,8 +19,7 @@ final class WeatherMainViewModel: ObservableObject {
     @Published var hourly: [HourlyWeather] = []
     @Published var daily: [DailyWeather] = []
     
-    @Published var lat: Double?
-    @Published var lon: Double?
+    @Published var coordinate: CLLocationCoordinate2D? = nil
     
     @ObservedObject private var locationManager = LocationManager()
     
@@ -28,29 +27,28 @@ final class WeatherMainViewModel: ObservableObject {
         getCoordinates()
     }
     
-    func bindWeatherData(lat: Double, lon: Double) {
-        WeatherData().getData(latitude: String(lat), longtitude: String(lon)) { data in
+    func bindWeatherData(coordinate: CLLocationCoordinate2D) {
+        WeatherData().getData(latitude: String(coordinate.latitude), longtitude: String(coordinate.longitude)) { data in
             self.timeZone = TimeZone(identifier: data.timezone)
                     
             self.current = data.current
             self.hourly = data.hourly
             self.daily = data.daily
             
-            self.coordinatesToCity(lat: lat, lon: lon)
+            self.coordinatesToCity(coordinates: coordinate)
         }
     }
     
     func getCoordinates() {
         DispatchQueue.main.async {
             let coordinate = self.locationManager.location != nil ? self.locationManager.location!.coordinate: CLLocationCoordinate2D()
-            self.lat = coordinate.latitude
-            self.lon = coordinate.longitude
+            self.coordinate = coordinate
         }
     }
     
-    private func coordinatesToCity(lat: Double, lon: Double) {
+    private func coordinatesToCity(coordinates: CLLocationCoordinate2D) {
         let geocoder = CLGeocoder()
-        let location = CLLocation(latitude: lat, longitude: lon)
+        let location = CLLocation(latitude: coordinates.latitude, longitude: coordinates.longitude)
         
         geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
             if let error = error {
@@ -61,6 +59,20 @@ final class WeatherMainViewModel: ObservableObject {
                     let city = placemark.locality ?? placemark.subAdministrativeArea ?? placemark.administrativeArea
                     self.cityName = (city ?? "City not found") + ", " + country
                 }
+            }
+        }
+    }
+    
+    func cityToCoordinates(city: City) {
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(city.title) { (placemarks, error) in
+            guard error == nil else {
+                print(error!.localizedDescription)
+                return
+            }
+            if let placemark = placemarks?[0] {
+                let coordinates = placemark.location?.coordinate
+                self.coordinate = coordinates
             }
         }
     }
