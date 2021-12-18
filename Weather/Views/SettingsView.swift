@@ -47,6 +47,7 @@ struct SettingsView: View {
                     label: {
                         Text("Change city")
                     })
+
                 HStack {
                     Text("Units")
                     Spacer()
@@ -55,6 +56,14 @@ struct SettingsView: View {
                         Text("Fahrenheit, miles/h").tag(Units.imperial)
                     })
                     .pickerStyle(MenuPickerStyle())
+                }
+                
+                NavigationLink(destination: WeatherMainLoadingView(isUpdating: true, city: nil).navigationBarHidden(true)) {
+                    Label {
+                        Text("Update your location")
+                    } icon: {
+                        Image(systemName: "location.fill")
+                    }
                 }
             }
             Section(header: Text("Other")) {

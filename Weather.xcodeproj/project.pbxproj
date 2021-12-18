@@ -110,14 +110,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		F71523FA274B6D1B00FB0447 /* Settings */ = {
-			isa = PBXGroup;
-			children = (
-				F7152404274B6D6700FB0447 /* SettingsView.swift */,
-			);
-			path = Settings;
-			sourceTree = "<group>";
-		};
 		F719BB6F276371C5008F7FDE /* Country */ = {
 			isa = PBXGroup;
 			children = (
@@ -231,8 +223,8 @@
 			isa = PBXGroup;
 			children = (
 				F780FAB72732B39100F93491 /* AuxViews */,
+				F7152404274B6D6700FB0447 /* SettingsView.swift */,
 				F7CCA4F52760C10400EB676D /* Location */,
-				F71523FA274B6D1B00FB0447 /* Settings */,
 				F77EA9382712C559000B8883 /* WeatherMain */,
 			);
 			path = Views;

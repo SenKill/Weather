@@ -55,7 +55,10 @@ final class WeatherMainViewModel: ObservableObject {
                 print("Unable to Reverse Geocode Location (\(error))")
             } else {
                 if let placemarks = placemarks, let placemark = placemarks.first {
-                    let country = placemark.country!
+                    guard let country = placemark.country else {
+                        print("ERROR: Wrong coordinates")
+                        return
+                    }
                     let city = placemark.locality ?? placemark.subAdministrativeArea ?? placemark.administrativeArea
                     self.cityName = (city ?? "City not found") + ", " + country
                 }

@@ -28,6 +28,5 @@ struct HourlyForecastView: View {
                 }
             }
         }
-        .padding(.vertical)
     }
 }

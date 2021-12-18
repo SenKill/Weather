@@ -11,40 +11,51 @@ import SwiftUI
 
 struct WeatherMainLoadingView: View {
     @EnvironmentObject private var viewModel: WeatherMainViewModel
+    @State var isUpdating: Bool
     let city: City?
     
     var body: some View {
-        if let city: City = city {
-            if viewModel.coordinate != nil {
-                LoadingView()
-                    .onAppear {
-                        viewModel.coordinate = nil
-                    }
+        if isUpdating {
+            LoadingView()
+                .onAppear {
+                    viewModel.cityName = ""
+                    viewModel.coordinate = nil
+                    viewModel.getCoordinates()
+                    isUpdating = false
+                }
+        } else {
+            if let city: City = city {
+                if viewModel.coordinate != nil {
+                    LoadingView()
+                        .onAppear {
+                            viewModel.coordinate = nil
+                        }
+                }
+                else if viewModel.coordinate == nil {
+                    LoadingView()
+                        .onAppear {
+                            viewModel.cityName = ""
+                            viewModel.cityToCoordinates(city: city)
+                        }
+                } else if viewModel.cityName.isEmpty {
+                    LoadingView()
+                        .onAppear { viewModel.bindWeatherData(coordinate: viewModel.coordinate!) }
+                } else {
+                    WeatherMainView()
+                        .environmentObject(viewModel)
+                }
             }
-            else if viewModel.coordinate == nil {
-                LoadingView()
-                    .onAppear {
-                        viewModel.cityName = ""
-                        viewModel.cityToCoordinates(city: city)
-                    }
-            } else if viewModel.cityName.isEmpty {
-                LoadingView()
-                    .onAppear { viewModel.bindWeatherData(coordinate: viewModel.coordinate!) }
-            } else {
-                WeatherMainView()
-                    .environmentObject(viewModel)
-            }
-        }
-        
-        else {
-            if viewModel.coordinate == nil {
-                LoadingView()
-            } else if viewModel.cityName.isEmpty {
-                LoadingView()
-                    .onAppear { viewModel.bindWeatherData(coordinate: viewModel.coordinate!) }
-            } else {
-                WeatherMainView()
-                    .environmentObject(viewModel)
+            
+            else {
+                if viewModel.coordinate == nil || viewModel.coordinate?.latitude == 0.0 {
+                    LoadingView()
+                } else if viewModel.cityName.isEmpty {
+                    LoadingView()
+                        .onAppear { viewModel.bindWeatherData(coordinate: viewModel.coordinate!) }
+                } else {
+                    WeatherMainView()
+                        .environmentObject(viewModel)
+                }
             }
         }
     }
@@ -84,6 +95,7 @@ struct WeatherMainView: View {
                                         .resizable()
                                         .scaledToFit()
                                         .frame(minWidth: 30, idealWidth: 35, maxWidth: 40, minHeight: 30, idealHeight: 35, maxHeight: 40, alignment: .center)
+                                        .foregroundColor(Color.primary)
                                 })
                         }
                         .padding()
@@ -139,7 +151,6 @@ struct WeatherMainView: View {
                     DailyForecastView()
                 }
             }
-            .foregroundColor(Color.primary)
             .navigationBarHidden(true)
         }
         .navigationViewStyle(StackNavigationViewStyle())

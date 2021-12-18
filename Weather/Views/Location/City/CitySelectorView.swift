@@ -62,7 +62,7 @@ struct CitySelectorView: View {
         .navigationBarTitleDisplayMode(.inline)
         .background(
             NavigationLink(
-                destination: WeatherMainLoadingView(city: selectedCity).navigationBarHidden(true),
+                destination: WeatherMainLoadingView(isUpdating: false, city: selectedCity).navigationBarHidden(true),
                 isActive: $navigateToMain,
                 label: { EmptyView() })
         )
