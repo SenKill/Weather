@@ -20,13 +20,18 @@ final class WeatherMainViewModel: ObservableObject {
     @Published var daily: [DailyWeather] = []
     
     @Published var coordinate: CLLocationCoordinate2D? = nil
+    @Published var dataUpdated: Bool = false
     
     @ObservedObject private var locationManager = LocationManager()
     
     init() {
         getCoordinates()
     }
-    
+    /*
+    func loadData() {
+        DispatchQueue.asyncAndWait(<#T##self: DispatchQueue##DispatchQueue#>)
+    }
+    */
     func bindWeatherData(coordinate: CLLocationCoordinate2D) {
         WeatherData().getData(latitude: String(coordinate.latitude), longtitude: String(coordinate.longitude)) { data in
             self.timeZone = TimeZone(identifier: data.timezone)
@@ -36,6 +41,10 @@ final class WeatherMainViewModel: ObservableObject {
             self.daily = data.daily
             
             self.coordinatesToCity(coordinates: coordinate)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                self.dataUpdated.toggle()
+            }
         }
     }
     

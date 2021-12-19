@@ -155,7 +155,6 @@ struct WeatherMainView: View {
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }
-    
 }
 
 struct WeatherDetail_Previews: PreviewProvider {
