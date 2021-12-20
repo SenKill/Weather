@@ -8,21 +8,22 @@
 import SwiftUI
 
 struct HourlyForecastView: View {
-    @EnvironmentObject private var viewModel: WeatherMainViewModel
+    let hourly: [HourlyWeather]
+    let timeZone: TimeZone
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
-                ForEach(0 ..< viewModel.hourly.count) { column in
+                ForEach(0 ..< hourly.count) { column in
                     VStack(alignment: .center) {
-                        Text(Double(viewModel.hourly[column].dt).getDateHourly(timeZone: viewModel.timeZone!))
-                        Image(viewModel.hourly[column].weather[0].icon)
+                        Text(Double(hourly[column].dt).getDateHourly(timeZone: timeZone))
+                        Image(hourly[column].weather[0].icon)
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 60, height: 60, alignment: .center)
-                        Text(viewModel.hourly[column].temp.tempToString())
+                        Text(hourly[column].temp.tempToString())
                             .font(.title3)
-                        Text(viewModel.hourly[column].wind_speed.windToString())
+                        Text(hourly[column].wind_speed.windToString())
                     }
                     .padding(10)
                 }

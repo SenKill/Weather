@@ -8,23 +8,24 @@
 import SwiftUI
 
 struct DailyForecastView: View {
-    @EnvironmentObject private var viewModel: WeatherMainViewModel
+    let daily: [DailyWeather]
+    let timeZone: TimeZone
     
     var body: some View {
         // TODO: Create another view and window for dailyForecast
         ScrollView(.vertical, showsIndicators: false) {
-            ForEach(0 ..< viewModel.daily.count) { column in
+            ForEach(0 ..< daily.count) { column in
                 ZStack(alignment: .center) {
                     HStack {
-                        Text(Double(viewModel.daily[column].dt).getDateDaily(timeZone: viewModel.timeZone!))
+                        Text(Double(daily[column].dt).getDateDaily(timeZone: timeZone))
                         Spacer()
                         HStack {
-                            Text(viewModel.daily[column].temp.day.tempToString())
-                            Text(viewModel.daily[column].temp.night.tempToString())
+                            Text(daily[column].temp.day.tempToString())
+                            Text(daily[column].temp.night.tempToString())
                                 .foregroundColor(Color.secondary)
                         }
                     }
-                    Image(viewModel.daily[column].weather[0].icon)
+                    Image(daily[column].weather[0].icon)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 40, height: 40)

@@ -32,6 +32,11 @@ final class WeatherMainViewModel: ObservableObject {
         DispatchQueue.asyncAndWait(<#T##self: DispatchQueue##DispatchQueue#>)
     }
     */
+    
+    func locationPermCheck() -> Bool {
+        return CLLocationManager.locationServicesEnabled()
+    }
+    
     func bindWeatherData(coordinate: CLLocationCoordinate2D) {
         WeatherData().getData(latitude: String(coordinate.latitude), longtitude: String(coordinate.longitude)) { data in
             self.timeZone = TimeZone(identifier: data.timezone)
