@@ -95,61 +95,64 @@ struct WeatherMainView: View {
                                     .scaledToFit()
                                     .frame(minWidth: 25, idealWidth: 30, maxWidth: 35, minHeight: 25, idealHeight: 30, maxHeight: 35, alignment: .center)
                                     .foregroundColor(Color.primary)
-                            })
-                    }
-                    .padding()
-                    HStack {
-                        VStack {
-                            HStack {
-                                Text(viewModel.current!.temp.tempToString())
-                                    .font(.system(size: 80,
-                                                  weight: .semibold,
-                                                  design: .default))
-                                Rectangle()
-                                    .frame(width: 3, height: 100, alignment: .center)
-                                VStack(alignment: .leading) {
-                                    Group {
-                                        Text(viewModel.current!.weather[0].description)
-                                        Text("H: " + viewModel.daily[0].temp.max.tempToString())
-                                        Text("L: " + viewModel.daily[0].temp.min.tempToString())
-                                    }
-                                    .font(.system(size: 20, weight: .medium, design: .default))
-                                    .padding(2)
-                                }
-                                Spacer()
                             }
-                            .padding(.bottom)
-                            HStack {
-                                VStack {
-                                    HStack {
-                                        VStack(alignment: .leading) {
-                                            Text("Wind")
-                                            Text("Humidity")
-                                            Text("Feels like")
-                                            Text("Pressure")
-                                        }
-                                        .font(.title3)
-                                        .foregroundColor(Color.secondary)
-                                        VStack(alignment: .leading) {
-                                            Text(viewModel.current!.wind_speed.windToString())
-                                            Text("\(viewModel.current!.humidity)%")
-                                            Text(viewModel.current!.feels_like.tempToString())
-                                            Text("\(viewModel.current!.pressure)mbar")
-                                        }
-                                        .font(.title3)
-                                    }
-                                }
-                                Spacer()
-                            }
-                        }
-                        .background(
-                            // MARK: Background Image
-                            Image(viewModel.current!.weather[0].icon + "b")
-                                .resizable()
-                                .scaledToFill()
-                                .offset(x: UIScreen.main.bounds.width / 3)
                         )
                     }
+                    .zIndex(1)
+                    .padding()
+                    VStack {
+                        HStack {
+                            Text(viewModel.current!.temp.tempToString())
+                                .font(.system(size: 80,
+                                              weight: .semibold,
+                                              design: .default))
+                            Rectangle()
+                                .frame(width: 3, height: 100, alignment: .center)
+                            VStack(alignment: .leading) {
+                                Group {
+                                    Text(viewModel.current!.weather[0].description)
+                                    Text("H: " + viewModel.daily[0].temp.max.tempToString())
+                                    Text("L: " + viewModel.daily[0].temp.min.tempToString())
+                                }
+                                .font(.system(size: 20, weight: .medium, design: .default))
+                                .padding(2)
+                            }
+                            Spacer()
+                        }
+                        .padding(.bottom)
+                        HStack {
+                            VStack {
+                                HStack {
+                                    VStack(alignment: .leading) {
+                                        Text("Wind")
+                                        Text("Humidity")
+                                        Text("Feels like")
+                                        Text("Pressure")
+                                    }
+                                    .font(.title3)
+                                    .foregroundColor(Color.secondary)
+                                    VStack(alignment: .leading) {
+                                        Text(viewModel.current!.wind_speed.windToString())
+                                        Text("\(viewModel.current!.humidity)%")
+                                        Text(viewModel.current!.feels_like.tempToString())
+                                        Text("\(viewModel.current!.pressure)mbar")
+                                    }
+                                    .font(.title3)
+                                }
+                            }
+                            Spacer()
+                        }
+                    }
+                    .background(
+                        // MARK: Background Image
+                        Image(viewModel.current!.weather[0].icon + "b")
+                            .resizable()
+                            .scaledToFill()
+                            .offset(x: UIScreen.main.bounds.width / 3)
+                            .onTapGesture {
+                                print("background touched")
+                            }
+                    )
                     .padding()
                     Spacer()
                     Divider()

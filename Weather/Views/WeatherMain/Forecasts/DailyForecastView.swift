@@ -12,7 +12,6 @@ struct DailyForecastView: View {
     let timeZone: TimeZone
     
     var body: some View {
-        // TODO: Create another view and window for dailyForecast
         ScrollView(.vertical, showsIndicators: false) {
             ForEach(0 ..< daily.count) { column in
                 ZStack(alignment: .center) {
