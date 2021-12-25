@@ -31,6 +31,6 @@ struct DailyForecastView: View {
                 }
             }
         }
-        .padding([.leading, .trailing])
+        .padding(.horizontal)
     }
 }

@@ -18,11 +18,6 @@ class CitySelectorViewModel: ObservableObject {
     
     var cityCancellables = Set<AnyCancellable>()
     
-    deinit {
-        print("\(country?.title ?? "some") country is being deinitialized")
-        // cityCancellables.removeAll()
-    }
-    
     init() {
         addSubscribers()
     }
@@ -40,7 +35,7 @@ class CitySelectorViewModel: ObservableObject {
             .combineLatest($allCities)
             .debounce(for: .seconds(0.7), scheduler: DispatchQueue.main)
             .map(filterCities)
-            .sink{ print("Cities sink") }
+            .sink{ }
             .store(in: &cityCancellables)
     }
     

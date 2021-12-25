@@ -11,57 +11,19 @@ import SwiftUI
 
 struct WeatherMainLoadingView: View {
     @EnvironmentObject private var viewModel: WeatherMainViewModel
-    @State var isUpdating: Bool
     let city: City?
     
     var body: some View {
-        if isUpdating {
+        // MARK: USE .on methods
+        if viewModel.isLoading {
             LoadingView()
                 .onAppear {
-                    viewModel.cityName = ""
-                    viewModel.coordinate = nil
-                    viewModel.getCoordinates()
-                    isUpdating = false
+                    if let city = city {
+                        viewModel.loadData(withCity: city)
+                    }
                 }
         } else {
-            if let city: City = city {
-                if viewModel.coordinate != nil {
-                    LoadingView()
-                        .onAppear {
-                            viewModel.coordinate = nil
-                        }
-                }
-                else if viewModel.coordinate == nil {
-                    LoadingView()
-                        .onAppear {
-                            viewModel.cityName = ""
-                            viewModel.cityToCoordinates(city: city)
-                        }
-                } else if viewModel.cityName.isEmpty {
-                    LoadingView()
-                        .onAppear { viewModel.bindWeatherData(coordinate: viewModel.coordinate!) }
-                } else {
-                    WeatherMainView()
-                        .environmentObject(viewModel)
-                }
-            }
-            
-            else {
-                if viewModel.coordinate == nil || viewModel.coordinate?.latitude == 0.0 || viewModel.cityName.isEmpty {
-                    LoadingView()
-                        .onReceive(viewModel.$coordinate) { (coordinate) in
-                            if let coordinate = coordinate {
-                                if coordinate.latitude != 0.0 {
-                                    viewModel.bindWeatherData(coordinate: coordinate)
-                                }
-                            }
-                        }
-                        // MARK: USE .on methods
-                } else {
-                    WeatherMainView()
-                        .environmentObject(viewModel)
-                }
-            }
+            WeatherMainView()
         }
     }
 }
@@ -149,11 +111,8 @@ struct WeatherMainView: View {
                             .resizable()
                             .scaledToFill()
                             .offset(x: UIScreen.main.bounds.width / 3)
-                            .onTapGesture {
-                                print("background touched")
-                            }
                     )
-                    .padding()
+                    .padding([.horizontal, .bottom])
                     Spacer()
                     Divider()
                     HourlyForecastView(hourly: viewModel.hourly, timeZone: viewModel.timeZone!)

@@ -11,8 +11,8 @@ struct ContentView: View {
     @ObservedObject private var viewModel = WeatherMainViewModel()
     
     var body: some View {
-        WeatherMainLoadingView(isUpdating: false, city: nil)
-            .environmentObject(self.viewModel)
+        WeatherMainLoadingView(city: nil)
+            .environmentObject(viewModel)
     }
 }
 

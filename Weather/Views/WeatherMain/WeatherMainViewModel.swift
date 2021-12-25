@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
 import CoreLocation
 
 
@@ -20,24 +19,37 @@ final class WeatherMainViewModel: ObservableObject {
     @Published var daily: [DailyWeather] = []
     
     @Published var coordinate: CLLocationCoordinate2D? = nil
-    @Published var dataUpdated: Bool = false
+    @Published var isLoading: Bool = true
     
-    @ObservedObject private var locationManager = LocationManager()
+    private var locationManager = LocationManager()
     
     init() {
-        getCoordinates()
-    }
-    /*
-    func loadData() {
-        DispatchQueue.asyncAndWait(<#T##self: DispatchQueue##DispatchQueue#>)
-    }
-    */
-    
-    func locationPermCheck() -> Bool {
-        return CLLocationManager.locationServicesEnabled()
+        self.loadData(withCity: nil)
+        print("ViewModel being initialized")
     }
     
-    func bindWeatherData(coordinate: CLLocationCoordinate2D) {
+    func loadData(withCity city: City?) {
+        self.cityName = ""
+        
+        let queue = DispatchQueue(label: "networking.weatherdata")
+        
+        let coordinateWorkItem = DispatchWorkItem {
+            if let someCity = city {
+                self.cityToCoordinates(city: someCity)
+            } else {
+                self.getCoordinates()
+            }
+        }
+        
+        let bindWorkItem = DispatchWorkItem {
+            self.bindWeatherData(coordinate: self.coordinate!)
+        }
+        
+        coordinateWorkItem.notify(queue: DispatchQueue.main, execute: bindWorkItem)
+        queue.async(execute: coordinateWorkItem)
+    }
+    
+    private func bindWeatherData(coordinate: CLLocationCoordinate2D) {
         WeatherData().getData(latitude: String(coordinate.latitude), longtitude: String(coordinate.longitude)) { data in
             self.timeZone = TimeZone(identifier: data.timezone)
                     
@@ -46,14 +58,11 @@ final class WeatherMainViewModel: ObservableObject {
             self.daily = data.daily
             
             self.coordinatesToCity(coordinates: coordinate)
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                self.dataUpdated.toggle()
-            }
+            self.isLoading = false
         }
     }
     
-    func getCoordinates() {
+    private func getCoordinates() {
         DispatchQueue.main.async {
             let coordinate = self.locationManager.location != nil ? self.locationManager.location!.coordinate: CLLocationCoordinate2D()
             self.coordinate = coordinate
@@ -80,7 +89,7 @@ final class WeatherMainViewModel: ObservableObject {
         }
     }
     
-    func cityToCoordinates(city: City) {
+    private func cityToCoordinates(city: City) {
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(city.title) { (placemarks, error) in
             guard error == nil else {
@@ -92,24 +101,5 @@ final class WeatherMainViewModel: ObservableObject {
                 self.coordinate = coordinates
             }
         }
-    }
-    
-    func setGradient(weather: String) -> LinearGradient? {
-        var colors: [Color]
-        switch weather {
-        case "Clear":
-            colors = [.white, .orange]
-            break;
-        case "Clouds":
-            colors = [.white, .blue]
-            break;
-        case "Rain":
-            colors = [.gray, .blue]
-            break;
-        default:
-            print("ERROR: Wrong weather was inputed!(or i'm haven't wrote other cases yet))))")
-            return nil
-        }
-        return LinearGradient(gradient: Gradient(colors: colors), startPoint: .topTrailing, endPoint: .bottom)
     }
 }

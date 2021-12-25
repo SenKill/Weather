@@ -62,16 +62,9 @@ struct CitySelectorView: View {
         .navigationBarTitleDisplayMode(.inline)
         .background(
             NavigationLink(
-                destination: WeatherMainLoadingView(isUpdating: false, city: selectedCity).navigationBarHidden(true),
+                destination: WeatherMainLoadingView(city: selectedCity).navigationBarHidden(true),
                 isActive: $navigateToMain,
                 label: { EmptyView() })
         )
-        .onDisappear {
-            print(viewModel.country?.title ?? "Some country", "is being dissapear!")
-            for i in viewModel.cityCancellables {
-                i.cancel()
-            }
-            viewModel.cityCancellables.removeAll()
-        }
     }
 }
