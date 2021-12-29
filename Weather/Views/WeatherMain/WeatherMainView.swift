@@ -11,24 +11,28 @@ import SwiftUI
 
 struct WeatherMainLoadingView: View {
     @EnvironmentObject private var viewModel: WeatherMainViewModel
-    let city: City?
+    @State var city: City?
+    @State var isUpdating: Bool? = nil
     
     var body: some View {
-        // MARK: USE .on methods
-        if viewModel.isLoading {
+        if let city = city {
             LoadingView()
                 .onAppear {
-                    if let city = city {
-                        viewModel.loadData(withCity: city)
-                    }
+                    viewModel.loadData(withCity: city)
+                    self.city = nil
                 }
+        } else if isUpdating != nil {
+            LoadingView()
+                .onAppear {
+                    viewModel.loadData(withCity: nil)
+                }
+        } else if viewModel.isLoading {
+            LoadingView()
         } else {
             WeatherMainView()
         }
     }
 }
-
-
 
 
 struct WeatherMainView: View {
@@ -81,7 +85,7 @@ struct WeatherMainView: View {
                             }
                             Spacer()
                         }
-                        .padding(.bottom)
+                        .padding(.vertical)
                         HStack {
                             VStack {
                                 HStack {
@@ -97,13 +101,14 @@ struct WeatherMainView: View {
                                         Text(viewModel.current!.wind_speed.windToString())
                                         Text("\(viewModel.current!.humidity)%")
                                         Text(viewModel.current!.feels_like.tempToString())
-                                        Text("\(viewModel.current!.pressure)mbar")
+                                        Text("\(viewModel.current!.pressure) mbar")
                                     }
                                     .font(.title3)
                                 }
                             }
                             Spacer()
                         }
+                        .padding(.top)
                     }
                     .background(
                         // MARK: Background Image

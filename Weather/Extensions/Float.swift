@@ -16,7 +16,7 @@ extension Float {
     
     func windToString() -> String {
         let wind = self
-        let result: String = String(format: "%.1f", wind) + "m/s"
+        let result: String = String(format: "%.1f", wind) + " m/s"
         return result
     }
 }

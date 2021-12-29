@@ -52,6 +52,7 @@ struct CitySelectorView: View {
                     title: Text("Are you sure?"),
                     message: Text("You selected city - \(selectedCity?.title ?? "nil"),\n this will update weather and city"),
                     primaryButton: .default(Text("OK")) {
+                        selectedCity?.region = viewModel.country?.title
                         navigateToMain.toggle()
                     },
                     secondaryButton: .cancel()

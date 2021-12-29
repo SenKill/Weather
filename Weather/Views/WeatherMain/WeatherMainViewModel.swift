@@ -8,8 +8,6 @@
 import Foundation
 import CoreLocation
 
-
-// TODO: Save latest data to UserDefaults or CoreData
 final class WeatherMainViewModel: ObservableObject {
     @Published var timeZone: TimeZone?
     @Published var cityName: String = ""
@@ -20,32 +18,26 @@ final class WeatherMainViewModel: ObservableObject {
     
     @Published var coordinate: CLLocationCoordinate2D? = nil
     @Published var isLoading: Bool = true
+    @Published var test: Bool = false
     
     private var locationManager = LocationManager()
     
     init() {
+        // TODO: Save latest data to UserDefaults or CoreData
         self.loadData(withCity: nil)
-        print("ViewModel being initialized")
     }
     
     func loadData(withCity city: City?) {
-        self.cityName = ""
+        self.isLoading = true
         
         let queue = DispatchQueue(label: "networking.weatherdata")
-        
         let coordinateWorkItem = DispatchWorkItem {
             if let someCity = city {
                 self.cityToCoordinates(city: someCity)
             } else {
-                self.getCoordinates()
+                self.getUserCoordinates()
             }
         }
-        
-        let bindWorkItem = DispatchWorkItem {
-            self.bindWeatherData(coordinate: self.coordinate!)
-        }
-        
-        coordinateWorkItem.notify(queue: DispatchQueue.main, execute: bindWorkItem)
         queue.async(execute: coordinateWorkItem)
     }
     
@@ -58,14 +50,6 @@ final class WeatherMainViewModel: ObservableObject {
             self.daily = data.daily
             
             self.coordinatesToCity(coordinates: coordinate)
-            self.isLoading = false
-        }
-    }
-    
-    private func getCoordinates() {
-        DispatchQueue.main.async {
-            let coordinate = self.locationManager.location != nil ? self.locationManager.location!.coordinate: CLLocationCoordinate2D()
-            self.coordinate = coordinate
         }
     }
     
@@ -75,7 +59,7 @@ final class WeatherMainViewModel: ObservableObject {
         
         geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
             if let error = error {
-                print("Unable to Reverse Geocode Location (\(error))")
+                print("Unable to Reverse Geocode Location (\(error.localizedDescription))")
             } else {
                 if let placemarks = placemarks, let placemark = placemarks.first {
                     guard let country = placemark.country else {
@@ -84,21 +68,33 @@ final class WeatherMainViewModel: ObservableObject {
                     }
                     let city = placemark.locality ?? placemark.subAdministrativeArea ?? placemark.administrativeArea
                     self.cityName = (city ?? "City not found") + ", " + country
+                    self.isLoading = false
                 }
             }
         }
     }
     
+    private func getUserCoordinates() {
+        DispatchQueue.main.async {
+            let coordinate = self.locationManager.location != nil ? self.locationManager.location!.coordinate: CLLocationCoordinate2D()
+            self.bindWeatherData(coordinate: coordinate)
+        }
+    }
+    
     private func cityToCoordinates(city: City) {
         let geocoder = CLGeocoder()
-        geocoder.geocodeAddressString(city.title) { (placemarks, error) in
+        let adress = ("\(city.title), \(city.region ?? "")")
+        geocoder.geocodeAddressString(adress) { (placemarks, error) in
             guard error == nil else {
                 print(error!.localizedDescription)
                 return
             }
             if let placemark = placemarks?[0] {
-                let coordinates = placemark.location?.coordinate
-                self.coordinate = coordinates
+                if let coordinates = placemark.location?.coordinate {
+                    self.bindWeatherData(coordinate: coordinates)
+                } else {
+                    print("Error with converting city to coordinates")
+                }
             }
         }
     }

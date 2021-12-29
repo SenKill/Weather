@@ -58,7 +58,7 @@ struct SettingsView: View {
                     .pickerStyle(MenuPickerStyle())
                 }
                 
-                NavigationLink(destination: WeatherMainLoadingView(city: nil).navigationBarHidden(true)) {
+                NavigationLink(destination: WeatherMainLoadingView(city: nil, isUpdating: true).navigationBarHidden(true)) {
                     Label {
                         Text("Update your location")
                     } icon: {

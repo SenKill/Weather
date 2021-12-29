@@ -35,7 +35,7 @@ struct City: Codable, Identifiable, Equatable {
     let id: Int
     let title: String
     let area: String?
-    let region: String?
+    var region: String?
     let important: Int?
 }
 
