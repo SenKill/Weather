@@ -19,6 +19,7 @@ class CitySelectorViewModel: ObservableObject {
     var cityCancellables = Set<AnyCancellable>()
     
     init() {
+        print("xd")
         addSubscribers()
     }
     
@@ -28,7 +29,6 @@ class CitySelectorViewModel: ObservableObject {
         }
     }
     
-    // TODO: Solve problem with publishers (Maybe problem with the combineLatest)
     private func addSubscribers() {
         // Updates cities
         $citySearchText

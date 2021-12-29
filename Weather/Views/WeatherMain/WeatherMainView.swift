@@ -30,6 +30,7 @@ struct WeatherMainLoadingView: View {
             LoadingView()
         } else {
             WeatherMainView()
+                .animation(.spring())
         }
     }
 }

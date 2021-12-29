@@ -9,8 +9,11 @@ import SwiftUI
 
 struct CitySelectorLoadingView: View {
     @ObservedObject private var viewModel = CitySelectorViewModel()
+    @State var showCityView: Bool = false
+    @Binding var showLoadingView: Bool
     
-    init(country: Country?) {
+    init(country: Country?, showLoadingView: Binding<Bool>) {
+        self._showLoadingView = showLoadingView
         if let country = country {
             viewModel.country = country
             viewModel.getCitiesStart(lang: "en", id: country.id, query: nil, count: 50)
@@ -19,20 +22,28 @@ struct CitySelectorLoadingView: View {
     
     var body: some View {
         ZStack {
-            if viewModel.allCities != [] {
-                CitySelectorView(viewModel: viewModel)
-            } else {
-                LoadingView()
-            }
+            LoadingView()
+                .onReceive(viewModel.$allCities, perform: { _ in
+                    showCityView = true
+                })
+                .sheet(isPresented: $showCityView) {
+                    NavigationView {
+                        CitySelectorView(viewModel: viewModel, showLoadingView: $showLoadingView, showCityView: $showCityView)
+                    }
+                }
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 
 struct CitySelectorView: View {
     @ObservedObject var viewModel: CitySelectorViewModel
     
-    @State private var showAlert = false
+    @Binding var showLoadingView: Bool
+    @Binding var showCityView: Bool
+
     @State private var navigateToMain = false
+    @State private var showAlert = false
     @State private var selectedCity: City?
     
     var body: some View {
@@ -53,7 +64,10 @@ struct CitySelectorView: View {
                     message: Text("You selected city - \(selectedCity?.title ?? "nil"),\n this will update weather and city"),
                     primaryButton: .default(Text("OK")) {
                         selectedCity?.region = viewModel.country?.title
-                        navigateToMain.toggle()
+                        navigateToMain = true
+                        
+                        showCityView = false
+                        showLoadingView = false
                     },
                     secondaryButton: .cancel()
                 )
@@ -67,5 +81,8 @@ struct CitySelectorView: View {
                 isActive: $navigateToMain,
                 label: { EmptyView() })
         )
+        .onDisappear {
+            showLoadingView = false
+        }
     }
 }
