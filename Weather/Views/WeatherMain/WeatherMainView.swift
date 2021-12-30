@@ -127,6 +127,7 @@ struct WeatherMainView: View {
                 }
             }
             .navigationBarHidden(true)
+            .navigationBarBackButtonHidden(true)
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }

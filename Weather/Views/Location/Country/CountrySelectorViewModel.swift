@@ -16,6 +16,10 @@ class CountrySelectorViewModel: ObservableObject {
     @Published var countrySearchText: String = ""
     
     private let locationData = LocationData()
+    
+    @Published var showLoadingView: Bool = false
+    @Published var selectedCountry: Country?
+    
     private var countryCancellables = Set<AnyCancellable>()
     
     init() {

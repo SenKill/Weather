@@ -16,10 +16,14 @@ class CitySelectorViewModel: ObservableObject {
     @Published var citySearchText = ""
     @Published var country: Country?
     
+    @Published var showCityView = false
+    @Published var navigateToMain = false
+    @Published var showAlert = false
+    @Published var selectedCity: City?
+    
     var cityCancellables = Set<AnyCancellable>()
     
     init() {
-        print("xd")
         addSubscribers()
     }
     

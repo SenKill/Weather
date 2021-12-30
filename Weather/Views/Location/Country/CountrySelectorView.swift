@@ -10,9 +10,6 @@ import SwiftUI
 struct CountrySelectorView: View {
     @ObservedObject private var viewModel = CountrySelectorViewModel()
     
-    @State private var showLoadingView: Bool = false
-    @State private var selectedCountry: Country?
-    
     var body: some View {
         VStack {
             SearchBarView(searchText: $viewModel.countrySearchText)
@@ -31,16 +28,16 @@ struct CountrySelectorView: View {
         .navigationBarTitleDisplayMode(.automatic)
         .background(
             NavigationLink(
-                destination: CitySelectorLoadingView(country: selectedCountry, showLoadingView: $showLoadingView),
-                isActive: $showLoadingView,
+                destination: CitySelectorLoadingView(country: viewModel.selectedCountry),
+                isActive: $viewModel.showLoadingView,
                 label: { EmptyView() }
             )
         )
     }
     
     private func segue(country: Country) {
-        selectedCountry = country
-        showLoadingView.toggle()
+        viewModel.selectedCountry = country
+        viewModel.showLoadingView = true
     }
 }
 

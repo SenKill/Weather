@@ -16,8 +16,6 @@
 		F7257E7B27081F30005C5076 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7257E7A27081F30005C5076 /* ContentView.swift */; };
 		F7257E7D27081F31005C5076 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F7257E7C27081F31005C5076 /* Assets.xcassets */; };
 		F7257E8027081F31005C5076 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F7257E7F27081F31005C5076 /* Preview Assets.xcassets */; };
-		F7257E8B27081F32005C5076 /* WeatherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7257E8A27081F32005C5076 /* WeatherTests.swift */; };
-		F7257E9627081F32005C5076 /* WeatherUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7257E9527081F32005C5076 /* WeatherUITests.swift */; };
 		F7257EA727081F7D005C5076 /* WeatherMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7257EA627081F7D005C5076 /* WeatherMainView.swift */; };
 		F73BC33C275A62B700CA2CD9 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73BC33B275A62B700CA2CD9 /* Color.swift */; };
 		F7438F562762543B001DBFA3 /* Float.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7438F552762543B001DBFA3 /* Float.swift */; };
@@ -65,11 +63,7 @@
 		F7257E7F27081F31005C5076 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F7257E8127081F31005C5076 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F7257E8627081F32005C5076 /* WeatherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeatherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F7257E8A27081F32005C5076 /* WeatherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherTests.swift; sourceTree = "<group>"; };
-		F7257E8C27081F32005C5076 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F7257E9127081F32005C5076 /* WeatherUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeatherUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F7257E9527081F32005C5076 /* WeatherUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherUITests.swift; sourceTree = "<group>"; };
-		F7257E9727081F32005C5076 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F7257EA627081F7D005C5076 /* WeatherMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherMainView.swift; sourceTree = "<group>"; };
 		F73BC33B275A62B700CA2CD9 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		F7438F552762543B001DBFA3 /* Float.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Float.swift; sourceTree = "<group>"; };
@@ -134,8 +128,6 @@
 			isa = PBXGroup;
 			children = (
 				F7257E7727081F30005C5076 /* Weather */,
-				F7257E8927081F32005C5076 /* WeatherTests */,
-				F7257E9427081F32005C5076 /* WeatherUITests */,
 				F7257E7627081F30005C5076 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -171,24 +163,6 @@
 				F7257E7F27081F31005C5076 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		F7257E8927081F32005C5076 /* WeatherTests */ = {
-			isa = PBXGroup;
-			children = (
-				F7257E8A27081F32005C5076 /* WeatherTests.swift */,
-				F7257E8C27081F32005C5076 /* Info.plist */,
-			);
-			path = WeatherTests;
-			sourceTree = "<group>";
-		};
-		F7257E9427081F32005C5076 /* WeatherUITests */ = {
-			isa = PBXGroup;
-			children = (
-				F7257E9527081F32005C5076 /* WeatherUITests.swift */,
-				F7257E9727081F32005C5076 /* Info.plist */,
-			);
-			path = WeatherUITests;
 			sourceTree = "<group>";
 		};
 		F7438F5127623178001DBFA3 /* Forecasts */ = {
@@ -420,7 +394,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F7257E8B27081F32005C5076 /* WeatherTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,7 +401,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F7257E9627081F32005C5076 /* WeatherUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,28 +8,36 @@
 import SwiftUI
 
 struct CitySelectorLoadingView: View {
-    @ObservedObject private var viewModel = CitySelectorViewModel()
-    @State var showCityView: Bool = false
-    @Binding var showLoadingView: Bool
-    
-    init(country: Country?, showLoadingView: Binding<Bool>) {
-        self._showLoadingView = showLoadingView
-        if let country = country {
-            viewModel.country = country
-            viewModel.getCitiesStart(lang: "en", id: country.id, query: nil, count: 50)
-        }
-    }
+    @EnvironmentObject private var viewModel: CitySelectorViewModel
+    let country: Country?
     
     var body: some View {
         ZStack {
             LoadingView()
-                .onReceive(viewModel.$allCities, perform: { _ in
-                    showCityView = true
-                })
-                .sheet(isPresented: $showCityView) {
-                    NavigationView {
-                        CitySelectorView(viewModel: viewModel, showLoadingView: $showLoadingView, showCityView: $showCityView)
+                .onAppear {
+                    if let country = country {
+                        viewModel.country = country
+                        viewModel.getCitiesStart(lang: "en", id: country.id, query: nil, count: 50)
                     }
+                }
+                .onReceive(viewModel.$allCities, perform: { _ in
+                    viewModel.showCityView = true
+                })
+                .sheet(isPresented: $viewModel.showCityView) {
+                    CitySelectorView(viewModel: viewModel)
+                }
+                .background(
+                    NavigationLink(
+                        destination: WeatherMainLoadingView(city: viewModel.selectedCity).navigationBarHidden(true),
+                        isActive: $viewModel.navigateToMain,
+                        label: { EmptyView() }
+                    )
+                )
+                .onDisappear {
+                    viewModel.selectedCity = nil
+                    viewModel.showCityView = false
+                    viewModel.navigateToMain = false
+                    viewModel.showAlert = false
                 }
         }
         .navigationBarBackButtonHidden(true)
@@ -39,13 +47,6 @@ struct CitySelectorLoadingView: View {
 struct CitySelectorView: View {
     @ObservedObject var viewModel: CitySelectorViewModel
     
-    @Binding var showLoadingView: Bool
-    @Binding var showCityView: Bool
-
-    @State private var navigateToMain = false
-    @State private var showAlert = false
-    @State private var selectedCity: City?
-    
     var body: some View {
         VStack {
             SearchBarView(searchText: $viewModel.citySearchText)
@@ -54,35 +55,23 @@ struct CitySelectorView: View {
                     .frame(maxWidth: .infinity)
                     .background(Color.theme.defaultBackground)
                     .onTapGesture {
-                        selectedCity = city
-                        showAlert.toggle()
+                        viewModel.selectedCity = city
+                        viewModel.showAlert.toggle()
                     }
             }
-            .alert(isPresented: $showAlert) {
+            .alert(isPresented: $viewModel.showAlert) {
                 Alert(
                     title: Text("Are you sure?"),
-                    message: Text("You selected city - \(selectedCity?.title ?? "nil"),\n this will update weather and city"),
+                    message: Text("You selected city - \(viewModel.selectedCity?.title ?? "nil"),\n this will update weather and city"),
                     primaryButton: .default(Text("OK")) {
-                        selectedCity?.region = viewModel.country?.title
-                        navigateToMain = true
+                        viewModel.selectedCity?.region = viewModel.country?.title
                         
-                        showCityView = false
-                        showLoadingView = false
+                        viewModel.navigateToMain = true
+                        viewModel.showCityView = false
                     },
                     secondaryButton: .cancel()
                 )
             }
-        }
-        .navigationTitle(viewModel.country!.title)
-        .navigationBarTitleDisplayMode(.inline)
-        .background(
-            NavigationLink(
-                destination: WeatherMainLoadingView(city: selectedCity).navigationBarHidden(true),
-                isActive: $navigateToMain,
-                label: { EmptyView() })
-        )
-        .onDisappear {
-            showLoadingView = false
         }
     }
 }

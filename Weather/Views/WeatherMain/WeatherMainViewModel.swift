@@ -77,6 +77,7 @@ final class WeatherMainViewModel: ObservableObject {
     private func getUserCoordinates() {
         DispatchQueue.main.async {
             let coordinate = self.locationManager.location != nil ? self.locationManager.location!.coordinate: CLLocationCoordinate2D()
+            self.coordinate = coordinate
             self.bindWeatherData(coordinate: coordinate)
         }
     }
@@ -87,7 +88,11 @@ final class WeatherMainViewModel: ObservableObject {
         geocoder.geocodeAddressString(adress) { (placemarks, error) in
             guard error == nil else {
                 print(error!.localizedDescription)
+                if let coordinate = self.coordinate {
+                    self.bindWeatherData(coordinate: coordinate)
+                }
                 return
+                // TODO: Error handling when city cannot be find
             }
             if let placemark = placemarks?[0] {
                 if let coordinates = placemark.location?.coordinate {
