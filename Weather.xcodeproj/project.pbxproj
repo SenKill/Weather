@@ -219,12 +219,28 @@
 		F7C3F3A627142AA70000FFED /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				F7F281492716BC2B00E3A7BB /* WeatherData.swift */,
-				F786B7A2275CBA68000F8BFA /* LocationData.swift */,
+				F7CC6F1E277EE4AB002D7F81 /* Networking */,
+				F7CC6F15277EE422002D7F81 /* AuxFiles */,
 				F7580CCD2734E6F700773E6C /* LocationManager.swift */,
-				F786B7AA275CE9A4000F8BFA /* Tokens.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		F7CC6F15277EE422002D7F81 /* AuxFiles */ = {
+			isa = PBXGroup;
+			children = (
+				F786B7AA275CE9A4000F8BFA /* Tokens.swift */,
+			);
+			path = AuxFiles;
+			sourceTree = "<group>";
+		};
+		F7CC6F1E277EE4AB002D7F81 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				F7F281492716BC2B00E3A7BB /* WeatherData.swift */,
+				F786B7A2275CBA68000F8BFA /* LocationData.swift */,
+			);
+			path = Networking;
 			sourceTree = "<group>";
 		};
 		F7CCA4F52760C10400EB676D /* Location */ = {

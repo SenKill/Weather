@@ -10,6 +10,7 @@ import SwiftUI
 struct CitySelectorLoadingView: View {
     @EnvironmentObject private var viewModel: CitySelectorViewModel
     let country: Country?
+    @Binding var showLoadingView: Bool
     
     var body: some View {
         ZStack {
@@ -23,9 +24,11 @@ struct CitySelectorLoadingView: View {
                 .onReceive(viewModel.$allCities, perform: { _ in
                     viewModel.showCityView = true
                 })
-                .sheet(isPresented: $viewModel.showCityView) {
+                .sheet(isPresented: $viewModel.showCityView, onDismiss: {
+                    showLoadingView = false
+                }, content: {
                     CitySelectorView(viewModel: viewModel)
-                }
+                })
                 .background(
                     NavigationLink(
                         destination: WeatherMainLoadingView(city: viewModel.selectedCity).navigationBarHidden(true),
@@ -40,7 +43,7 @@ struct CitySelectorLoadingView: View {
                     viewModel.showAlert = false
                 }
         }
-        .navigationBarBackButtonHidden(true)
+        .navigationBarHidden(true)
     }
 }
 

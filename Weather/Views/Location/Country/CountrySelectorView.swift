@@ -28,7 +28,7 @@ struct CountrySelectorView: View {
         .navigationBarTitleDisplayMode(.automatic)
         .background(
             NavigationLink(
-                destination: CitySelectorLoadingView(country: viewModel.selectedCountry),
+                destination: CitySelectorLoadingView(country: viewModel.selectedCountry, showLoadingView: $viewModel.showLoadingView),
                 isActive: $viewModel.showLoadingView,
                 label: { EmptyView() }
             )

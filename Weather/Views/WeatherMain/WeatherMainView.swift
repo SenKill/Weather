@@ -44,6 +44,7 @@ struct WeatherMainView: View {
             ZStack {
                 Color.theme.background
                     .ignoresSafeArea()
+                    .animation(.none)
                 VStack {
                     HStack {
                         VStack {
@@ -127,7 +128,6 @@ struct WeatherMainView: View {
                 }
             }
             .navigationBarHidden(true)
-            .navigationBarBackButtonHidden(true)
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }

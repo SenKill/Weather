@@ -20,6 +20,7 @@ class CitySelectorViewModel: ObservableObject {
     @Published var navigateToMain = false
     @Published var showAlert = false
     @Published var selectedCity: City?
+    @Published var dismissLoadingView = false
     
     var cityCancellables = Set<AnyCancellable>()
     
