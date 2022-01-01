@@ -21,6 +21,7 @@ final class WeatherMainViewModel: ObservableObject {
     @Published var test: Bool = false
     
     private var locationManager = LocationManager()
+    private let defaults = UserDefaults.standard
     
     init() {
         // TODO: Save latest data to UserDefaults or CoreData
@@ -41,8 +42,13 @@ final class WeatherMainViewModel: ObservableObject {
         queue.async(execute: coordinateWorkItem)
     }
     
-    private func bindWeatherData(coordinate: CLLocationCoordinate2D) {
-        WeatherData().getData(latitude: String(coordinate.latitude), longtitude: String(coordinate.longitude)) { data in
+    func bindWeatherData(coordinate: CLLocationCoordinate2D) {
+        self.isLoading = true
+        var units: String {
+            return UserDefaults.standard.string(forKey: "unit")!
+        }
+        
+        WeatherData().getData(latitude: String(coordinate.latitude), longtitude: String(coordinate.longitude), units: units) { data in
             self.timeZone = TimeZone(identifier: data.timezone)
                     
             self.current = data.current
@@ -53,6 +59,7 @@ final class WeatherMainViewModel: ObservableObject {
         }
     }
     
+    
     private func coordinatesToCity(coordinates: CLLocationCoordinate2D) {
         let geocoder = CLGeocoder()
         let location = CLLocation(latitude: coordinates.latitude, longitude: coordinates.longitude)
@@ -62,17 +69,22 @@ final class WeatherMainViewModel: ObservableObject {
                 print("Unable to Reverse Geocode Location (\(error.localizedDescription))")
             } else {
                 if let placemarks = placemarks, let placemark = placemarks.first {
-                    guard let country = placemark.country else {
-                        print("ERROR: Wrong coordinates")
-                        return
-                    }
-                    let city = placemark.locality ?? placemark.subAdministrativeArea ?? placemark.administrativeArea
-                    self.cityName = (city ?? "City not found") + ", " + country
-                    self.isLoading = false
+                    self.getCityName(placemark: placemark)
                 }
             }
         }
     }
+    
+    private func getCityName(placemark: CLPlacemark) {
+        guard let country = placemark.country else {
+            print("ERROR: Wrong coordinates")
+            return
+        }
+        let city = placemark.locality ?? placemark.subAdministrativeArea ?? placemark.administrativeArea
+        self.cityName = (city ?? "City not found") + ", " + country
+        self.isLoading = false
+    }
+    
     
     private func getUserCoordinates() {
         DispatchQueue.main.async {

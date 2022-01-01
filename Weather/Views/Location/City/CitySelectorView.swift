@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CitySelectorLoadingView: View {
-    @EnvironmentObject private var viewModel: CitySelectorViewModel
+    @StateObject private var viewModel = CitySelectorViewModel()
     let country: Country?
     @Binding var showLoadingView: Bool
     
@@ -37,10 +37,7 @@ struct CitySelectorLoadingView: View {
                     )
                 )
                 .onDisappear {
-                    viewModel.selectedCity = nil
-                    viewModel.showCityView = false
-                    viewModel.navigateToMain = false
-                    viewModel.showAlert = false
+                    viewModel.onDisappearAction()
                 }
         }
         .navigationBarHidden(true)
@@ -58,8 +55,7 @@ struct CitySelectorView: View {
                     .frame(maxWidth: .infinity)
                     .background(Color.theme.defaultBackground)
                     .onTapGesture {
-                        viewModel.selectedCity = city
-                        viewModel.showAlert.toggle()
+                        viewModel.selectCity(city: city)
                     }
             }
             .alert(isPresented: $viewModel.showAlert) {
@@ -67,10 +63,7 @@ struct CitySelectorView: View {
                     title: Text("Are you sure?"),
                     message: Text("You selected city - \(viewModel.selectedCity?.title ?? "nil"),\n this will update weather and city"),
                     primaryButton: .default(Text("OK")) {
-                        viewModel.selectedCity?.region = viewModel.country?.title
-                        
-                        viewModel.navigateToMain = true
-                        viewModel.showCityView = false
+                        viewModel.changeCity()
                     },
                     secondaryButton: .cancel()
                 )

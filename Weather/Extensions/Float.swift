@@ -8,15 +8,32 @@
 import Foundation
 
 extension Float {
+    var units: String {
+        return UserDefaults.standard.string(forKey: "unit")!
+    }
+    
     func tempToString() -> String {
         let temp = self
-        let result: String = String(format: "%.0f", temp) + "º"
+        var result: String = String(format: "%.0f", temp)
+        
+        if units == "metric" {
+            result += "º"
+        } else {
+            result += "ºF"
+        }
         return result
     }
     
     func windToString() -> String {
         let wind = self
-        let result: String = String(format: "%.1f", wind) + " m/s"
+        var result: String = String(format: "%.1f", wind)
+    
+        if units == "metric" {
+            result += " m/s"
+        } else {
+            result += " Mph"
+        }
+        
         return result
     }
 }

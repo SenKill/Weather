@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 // MARK: List of languages and Units
 enum Language: String, CaseIterable, Identifiable {
@@ -22,23 +23,10 @@ enum Language: String, CaseIterable, Identifiable {
     var id: String { self.rawValue }
 }
 
-enum Units: String {
-    case metric = "Celsius, metre/s."
-    case imperial = "Fahrenheit, miles/h"
-    
-    var cleanValue: String {
-        switch self {
-        case .metric: return "metric"
-        case .imperial: return "imperial"
-        }
-    }
-}
-
 struct SettingsView: View {
-    @State private var units = Units.metric
-    @State private var language = Language.en
+    @StateObject private var viewModel = SettingsViewModel()
     
-    // TODO: Real language and units changing
+    // TODO: Localization to other languages
     var body: some View {
         List {
             Section(header: Text("Main")) {
@@ -46,16 +34,18 @@ struct SettingsView: View {
                     destination: CountrySelectorView(),
                     label: {
                         Text("Change city")
-                    })
+                    }
+                )
 
                 HStack {
-                    Text("Units")
-                    Spacer()
-                    Picker(selection: $units, label: Text(units.rawValue), content: {
-                        Text("Celsius, metre/s.").tag(Units.metric)
-                        Text("Fahrenheit, miles/h").tag(Units.imperial)
-                    })
-                    .pickerStyle(MenuPickerStyle())
+                    Picker(viewModel.units[viewModel.selectedUnit]!, selection: $viewModel.selectedUnit) {
+                        Text("Celsius, metre/s.").tag("metric")
+                        Text("Fahrenheit, miles/h").tag("imperial")
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .onChange(of: viewModel.selectedUnit) { unit in
+                        UserDefaults.standard.set(unit, forKey: "unit")
+                    }
                 }
                 
                 NavigationLink(destination: WeatherMainLoadingView(city: nil, isUpdating: true).navigationBarHidden(true)) {
@@ -70,7 +60,7 @@ struct SettingsView: View {
                 HStack {
                     Text("Lanuage")
                     Spacer()
-                    Picker(selection: $language, label: Text(language.rawValue), content: {
+                    Picker(selection: $viewModel.language, label: Text(viewModel.language.rawValue), content: {
                         ForEach(Language.allCases) { localLanguage in
                             Text(localLanguage.rawValue).tag(localLanguage)
                         }

@@ -98,18 +98,18 @@ struct WeatherModel: Codable {
 }
 
 final class WeatherData {
-    func getData(latitude: String, longtitude: String, completion: @escaping (WeatherModel) -> ()) {
-        guard let url = URL(string: "https://api.openweathermap.org/data/2.5/onecall?lat=\(latitude)&lon=\(longtitude)&exclude=minutely,alerts&units=metric&appid=a0c0a6cb62d01e7faf2d0aa659b1b981") else {
+    func getData(latitude: String, longtitude: String, units: String, completion: @escaping (WeatherModel) -> ()) {
+        guard let url = URL(string: "https://api.openweathermap.org/data/2.5/onecall?lat=\(latitude)&lon=\(longtitude)&exclude=minutely,alerts&units=\(units)&appid=a0c0a6cb62d01e7faf2d0aa659b1b981") else {
             print("Wrong URL")
             return }
         
-        URLSession.shared.dataTask(with: url) { (data, responce, error) in
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
             if let error = error {
                 print("Error with getting weather data: \(error.localizedDescription)")
             }
             
-            guard let httpResopnce = responce as? HTTPURLResponse,(200...299).contains(httpResopnce.statusCode) else {
-                print("Error with responce(WeatherData), status code: \(responce!)")
+            guard let httpResopnce = response as? HTTPURLResponse,(200...299).contains(httpResopnce.statusCode) else {
+                print("Error with response(WeatherData), status code: \(response!)")
                 return
             }
             

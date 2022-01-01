@@ -9,12 +9,10 @@ import SwiftUI
 
 struct ContentView: View {
     @ObservedObject private var mainViewModel = WeatherMainViewModel()
-    @ObservedObject private var cityViewModel = CitySelectorViewModel()
     
     var body: some View {
         WeatherMainLoadingView(city: nil)
             .environmentObject(mainViewModel)
-            .environmentObject(cityViewModel)
     }
 }
 

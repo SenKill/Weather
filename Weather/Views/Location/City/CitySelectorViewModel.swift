@@ -34,6 +34,24 @@ class CitySelectorViewModel: ObservableObject {
         }
     }
     
+    func onDisappearAction() {
+        self.selectedCity = nil
+        self.showCityView = false
+        self.navigateToMain = false
+        self.showAlert = false
+    }
+    
+    func selectCity(city: City) {
+        self.selectedCity = city
+        self.showAlert.toggle()
+    }
+    
+    func changeCity() {
+        self.selectedCity?.region = self.country?.title
+        self.navigateToMain = true
+        self.showCityView = false
+    }
+    
     private func addSubscribers() {
         // Updates cities
         $citySearchText
