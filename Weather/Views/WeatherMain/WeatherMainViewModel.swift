@@ -18,7 +18,6 @@ final class WeatherMainViewModel: ObservableObject {
     
     @Published var coordinate: CLLocationCoordinate2D? = nil
     @Published var isLoading: Bool = true
-    @Published var test: Bool = false
     
     private var locationManager = LocationManager()
     private let defaults = UserDefaults.standard
@@ -43,7 +42,6 @@ final class WeatherMainViewModel: ObservableObject {
     }
     
     func bindWeatherData(coordinate: CLLocationCoordinate2D) {
-        self.isLoading = true
         var units: String {
             return UserDefaults.standard.string(forKey: "unit")!
         }

@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-// TODO: Pull to update feature
-
 struct WeatherMainLoadingView: View {
     @EnvironmentObject private var viewModel: WeatherMainViewModel
     @State var city: City?
@@ -142,10 +140,17 @@ struct WeatherMainView: View {
                         }
                     }
                 }, onRefresh: { control in
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                        // TODO: Add functionality to actually update the view
-                        control.endRefreshing()
+                    let queue = DispatchQueue(label: "bind.weatherdata")
+                    let backgroundWorkItem = DispatchWorkItem {
+                        viewModel.bindWeatherData(coordinate: viewModel.coordinate!)
                     }
+                    backgroundWorkItem.notify(queue: queue) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                            control.endRefreshing()
+                        })
+                    }
+                    
+                    queue.async(execute: backgroundWorkItem)
                 })
             }
             .navigationBarHidden(true)
