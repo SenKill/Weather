@@ -9,7 +9,7 @@ import Foundation
 
 extension Float {
     var units: String {
-        return UserDefaults.standard.string(forKey: "unit")!
+        return UserDefaults.standard.string(forKey: "unit") ?? "metric"
     }
     
     func tempToString() -> String {

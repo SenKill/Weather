@@ -13,6 +13,6 @@ final class SettingsViewModel: ObservableObject {
     @Published var language = Language.en
     
     init() {
-        selectedUnit = UserDefaults.standard.string(forKey: "unit")!
+        selectedUnit = UserDefaults.standard.string(forKey: "unit") ?? "metric"
     }
 }

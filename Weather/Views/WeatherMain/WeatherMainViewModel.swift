@@ -19,11 +19,20 @@ final class WeatherMainViewModel: ObservableObject {
     @Published var coordinate: CLLocationCoordinate2D? = nil
     @Published var isLoading: Bool = true
     
+    @Published var alertMessage: String = ""
+    @Published var alert: Bool = false
+    
     private var locationManager = LocationManager()
-    private let defaults = UserDefaults.standard
     
     init() {
+        /*
+        let defaults = UserDefaults.standard
         // TODO: Save latest data to UserDefaults or CoreData
+        
+        if let current: CurrentWeather = defaults.object(forKey: "current") as? CurrentWeather {
+            print(Date(timeIntervalSinceReferenceDate: TimeInterval(current.dt)))
+        }*/
+        
         self.loadData(withCity: nil)
     }
     
@@ -43,7 +52,7 @@ final class WeatherMainViewModel: ObservableObject {
     
     func bindWeatherData(coordinate: CLLocationCoordinate2D) {
         var units: String {
-            return UserDefaults.standard.string(forKey: "unit")!
+            return UserDefaults.standard.string(forKey: "unit") ?? "metric"
         }
         
         WeatherData().getData(latitude: String(coordinate.latitude), longtitude: String(coordinate.longitude), units: units) { data in
@@ -80,6 +89,8 @@ final class WeatherMainViewModel: ObservableObject {
         }
         let city = placemark.locality ?? placemark.subAdministrativeArea ?? placemark.administrativeArea
         self.cityName = (city ?? "City not found") + ", " + country
+        
+        // self.saveData()
         self.isLoading = false
     }
     
@@ -97,12 +108,13 @@ final class WeatherMainViewModel: ObservableObject {
         let adress = ("\(city.title), \(city.region ?? "")")
         geocoder.geocodeAddressString(adress) { (placemarks, error) in
             guard error == nil else {
-                print(error!.localizedDescription)
                 if let coordinate = self.coordinate {
                     self.bindWeatherData(coordinate: coordinate)
                 }
+                print(error!.localizedDescription)
+                self.alertMessage = "Cannot find city with this name.\n Loading weather from your last location."
+                self.alert.toggle()
                 return
-                // TODO: Error handling when city cannot be find
             }
             if let placemark = placemarks?[0] {
                 if let coordinates = placemark.location?.coordinate {
@@ -111,6 +123,19 @@ final class WeatherMainViewModel: ObservableObject {
                     print("Error with converting city to coordinates")
                 }
             }
+        }
+    }
+    
+    private func saveData() {
+        let queue = DispatchQueue(label: "save.weatherdata")
+        let defaults = UserDefaults.standard
+        
+        queue.async {
+            defaults.setValue(self.timeZone, forKey: "timezone")
+            defaults.setValue(self.cityName, forKey: "cityname")
+            defaults.setValue(self.current, forKey: "current")
+            defaults.setValue(self.daily, forKey: "daily")
+            defaults.setValue(self.hourly, forKey: "hourly")
         }
     }
 }

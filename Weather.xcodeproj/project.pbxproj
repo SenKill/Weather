@@ -30,6 +30,8 @@
 		F780FAC42732B3B100F93491 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F780FAC32732B3B100F93491 /* LoadingView.swift */; };
 		F786B7A3275CBA68000F8BFA /* LocationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F786B7A2275CBA68000F8BFA /* LocationData.swift */; };
 		F786B7AB275CE9A4000F8BFA /* Tokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = F786B7AA275CE9A4000F8BFA /* Tokens.swift */; };
+		F78F508A278198C60016806E /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78F5089278198C60016806E /* String.swift */; };
+		F78F509627819A870016806E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F78F509827819A870016806E /* Localizable.strings */; };
 		F7CCA5042760C35400EB676D /* CitySelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CCA5032760C35400EB676D /* CitySelectorView.swift */; };
 		F7F2814A2716BC2B00E3A7BB /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F281492716BC2B00E3A7BB /* WeatherData.swift */; };
 /* End PBXBuildFile section */
@@ -79,6 +81,9 @@
 		F780FAC32732B3B100F93491 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		F786B7A2275CBA68000F8BFA /* LocationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationData.swift; sourceTree = "<group>"; };
 		F786B7AA275CE9A4000F8BFA /* Tokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tokens.swift; sourceTree = "<group>"; };
+		F78F5089278198C60016806E /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		F78F509727819A870016806E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F78F509C27819A9B0016806E /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F7CCA5032760C35400EB676D /* CitySelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitySelectorView.swift; sourceTree = "<group>"; };
 		F7F281492716BC2B00E3A7BB /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -155,6 +160,7 @@
 				F7257E7C27081F31005C5076 /* Assets.xcassets */,
 				F7257E8127081F31005C5076 /* Info.plist */,
 				F7257E7E27081F31005C5076 /* Preview Content */,
+				F78F509827819A870016806E /* Localizable.strings */,
 			);
 			path = Weather;
 			sourceTree = "<group>";
@@ -183,6 +189,7 @@
 				F7438F552762543B001DBFA3 /* Float.swift */,
 				F73BC33B275A62B700CA2CD9 /* Color.swift */,
 				F77C88B3275B7E5000516175 /* UIApplication.swift */,
+				F78F5089278198C60016806E /* String.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -348,6 +355,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = F7257E6C27081F30005C5076;
 			productRefGroup = F7257E7627081F30005C5076 /* Products */;
@@ -367,6 +375,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F7257E8027081F31005C5076 /* Preview Assets.xcassets in Resources */,
+				F78F509627819A870016806E /* Localizable.strings in Resources */,
 				F7257E7D27081F31005C5076 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -398,6 +407,7 @@
 				F77C88B4275B7E5000516175 /* UIApplication.swift in Sources */,
 				F715240D274B731D00FB0447 /* DailyForecastView.swift in Sources */,
 				F7257EA727081F7D005C5076 /* WeatherMainView.swift in Sources */,
+				F78F508A278198C60016806E /* String.swift in Sources */,
 				F7F2814A2716BC2B00E3A7BB /* WeatherData.swift in Sources */,
 				F76F70422747B38D00A4A198 /* Double.swift in Sources */,
 				F780FAC42732B3B100F93491 /* LoadingView.swift in Sources */,
@@ -446,6 +456,18 @@
 			targetProxy = F7257E9227081F32005C5076 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		F78F509827819A870016806E /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F78F509727819A870016806E /* en */,
+				F78F509C27819A9B0016806E /* ru */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		F7257E9827081F32005C5076 /* Debug */ = {

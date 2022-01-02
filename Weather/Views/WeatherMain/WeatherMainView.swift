@@ -149,11 +149,17 @@ struct WeatherMainView: View {
                             control.endRefreshing()
                         })
                     }
-                    
                     queue.async(execute: backgroundWorkItem)
                 })
             }
             .navigationBarHidden(true)
+            .alert(isPresented: $viewModel.alert, content: {
+                Alert(
+                    title: Text("Error"),
+                    message: Text(viewModel.alertMessage),
+                    dismissButton: .cancel()
+                )
+            })
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }

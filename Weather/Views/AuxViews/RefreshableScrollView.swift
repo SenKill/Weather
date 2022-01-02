@@ -73,38 +73,3 @@ struct RefreshableScrollView<Content: View>: UIViewRepresentable {
         }
     }
 }
-
-struct RefreshableScrollViewTest: View {
-    @State var count: Int = 5
-    
-    
-    var body: some View {
-        NavigationView {
-            RefreshableScrollView(content: {
-                
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 3), count: 3), spacing: 3, content: {
-                    ForEach(1...count, id: \.self) { index in
-                        Color.red
-                            .frame(height: 183)
-                            .overlay(Text("\(index)").font(.largeTitle))
-                    }
-                })
-                .padding()
-                
-            }, onRefresh: { control in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                    self.count += 3
-                    control.endRefreshing()
-                }
-            })
-            .navigationTitle("Pull it down")
-            .navigationBarTitleDisplayMode(.inline)
-        }
-    }
-}
-
-struct RefreshableScrollView_Previews: PreviewProvider {
-    static var previews: some View {
-        RefreshableScrollViewTest()
-    }
-}
