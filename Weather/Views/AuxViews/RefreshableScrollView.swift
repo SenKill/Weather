@@ -26,7 +26,7 @@ struct RefreshableScrollView<Content: View>: UIViewRepresentable {
         let uiscrollView = UIScrollView()
         
         // Refresh customization
-        refreshControl.attributedTitle = NSAttributedString(string: "Loading...")
+        refreshControl.attributedTitle = NSAttributedString(string: "loading".localized())
         refreshControl.tintColor = .blue
         refreshControl.addTarget(context.coordinator, action: #selector(context.coordinator.onRefresh), for: .valueChanged)
         

@@ -27,3 +27,5 @@
 "cityAlertMessage" = "Are you sure?\n This action will update your weather and change current city";
 
 "cannotFindCityError" = "Cannot find city with this name.\n Loading weather from your last location.";
+
+"loading" = "Loading...";
