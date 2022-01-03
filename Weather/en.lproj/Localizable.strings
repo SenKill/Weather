@@ -1,1 +1,29 @@
+"wind" = "Wind";
+"humidity" = "Humidity";
+"feelsLike" = "Feels like";
+"pressure" = "Pressure";
 
+"mph" = " Mph";
+"m/s" = " m/s";
+
+"hpa" = " hPa";
+
+"settings" = "Settings";
+"main" = "Main";
+"other" = "Other";
+
+"changeCity" = "Change location";
+"metric" = "Celsius, metre/s.";
+"imperial" = "Fahrenheit, miles/h";
+"updateLoc" = "Update your location";
+
+"lang" = "Language";
+"en" = "English";
+"ru" = "Russian";
+
+"selectCountry" = "Select country";
+"sampleText" = "Write location here...";
+
+"cityAlertMessage" = "Are you sure?\n This action will update your weather and change current city";
+
+"cannotFindCityError" = "Cannot find city with this name.\n Loading weather from your last location.";

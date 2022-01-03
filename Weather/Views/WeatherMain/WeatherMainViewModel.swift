@@ -55,7 +55,11 @@ final class WeatherMainViewModel: ObservableObject {
             return UserDefaults.standard.string(forKey: "unit") ?? "metric"
         }
         
-        WeatherData().getData(latitude: String(coordinate.latitude), longtitude: String(coordinate.longitude), units: units) { data in
+        var language: String {
+            return Locale.current.languageCode ?? "en"
+        }
+        
+        WeatherData().getData(latitude: String(coordinate.latitude), longtitude: String(coordinate.longitude), units: units, language: language) { data in
             self.timeZone = TimeZone(identifier: data.timezone)
                     
             self.current = data.current
@@ -112,12 +116,13 @@ final class WeatherMainViewModel: ObservableObject {
                     self.bindWeatherData(coordinate: coordinate)
                 }
                 print(error!.localizedDescription)
-                self.alertMessage = "Cannot find city with this name.\n Loading weather from your last location."
+                self.alertMessage = "cannotFindCityError".localized()
                 self.alert.toggle()
                 return
             }
             if let placemark = placemarks?[0] {
                 if let coordinates = placemark.location?.coordinate {
+                    self.coordinate = coordinates
                     self.bindWeatherData(coordinate: coordinates)
                 } else {
                     print("Error with converting city to coordinates")

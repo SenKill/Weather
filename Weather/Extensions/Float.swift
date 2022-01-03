@@ -29,9 +29,9 @@ extension Float {
         var result: String = String(format: "%.1f", wind)
     
         if units == "metric" {
-            result += " m/s"
+            result += "m/s".localized()
         } else {
-            result += " Mph"
+            result += "mph".localized()
         }
         
         return result

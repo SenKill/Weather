@@ -17,7 +17,7 @@ struct SearchBarView: View {
                     searchText.isEmpty ?
                         Color.secondary : Color.primary
                 )
-            TextField("Write location here...", text: $searchText)
+            TextField("sampleText".localized(), text: $searchText)
                 .disableAutocorrection(true)
                 .foregroundColor(Color.primary)
                 .overlay(

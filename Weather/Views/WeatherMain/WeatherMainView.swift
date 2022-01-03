@@ -104,10 +104,10 @@ struct WeatherMainView: View {
                                     VStack {
                                         HStack {
                                             VStack(alignment: .leading) {
-                                                Text("Wind")
-                                                Text("Humidity")
-                                                Text("Feels like")
-                                                Text("Pressure")
+                                                Text("wind")
+                                                Text("humidity")
+                                                Text("feelsLike")
+                                                Text("pressure")
                                             }
                                             .font(.title3)
                                             .foregroundColor(Color.secondary)
@@ -115,7 +115,7 @@ struct WeatherMainView: View {
                                                 Text(viewModel.current!.wind_speed.windToString())
                                                 Text("\(viewModel.current!.humidity)%")
                                                 Text(viewModel.current!.feels_like.tempToString())
-                                                Text("\(viewModel.current!.pressure) mbar")
+                                                Text("\(viewModel.current!.pressure.addUnits)")
                                             }
                                             .font(.title3)
                                         }
@@ -157,7 +157,7 @@ struct WeatherMainView: View {
                 Alert(
                     title: Text("Error"),
                     message: Text(viewModel.alertMessage),
-                    dismissButton: .cancel()
+                    dismissButton: .cancel(Text("close"))
                 )
             })
         }

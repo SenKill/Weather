@@ -18,7 +18,7 @@ struct CitySelectorLoadingView: View {
                 .onAppear {
                     if let country = country {
                         viewModel.country = country
-                        viewModel.getCitiesStart(lang: "en", id: country.id, query: nil, count: 50)
+                        viewModel.getCitiesStart(id: country.id, query: nil, count: 50)
                     }
                 }
                 .onReceive(viewModel.$allCities, perform: { _ in
@@ -60,8 +60,8 @@ struct CitySelectorView: View {
             }
             .alert(isPresented: $viewModel.showAlert) {
                 Alert(
-                    title: Text("Are you sure?"),
-                    message: Text("You selected city - \(viewModel.selectedCity?.title ?? "nil"),\n this will update weather and city"),
+                    title: Text(viewModel.selectedCity?.title ?? "nil"),
+                    message: Text("cityAlertMessage"),
                     primaryButton: .default(Text("OK")) {
                         viewModel.changeCity()
                     },

@@ -24,7 +24,7 @@ struct CountrySelectorView: View {
                     }
             }
         }
-        .navigationTitle("Select country")
+        .navigationTitle("selectCountry")
         .navigationBarTitleDisplayMode(.automatic)
         .background(
             NavigationLink(

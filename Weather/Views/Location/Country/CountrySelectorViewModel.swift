@@ -24,11 +24,15 @@ class CountrySelectorViewModel: ObservableObject {
     
     init() {
         addSubscribers()
-        getCountriesData(lang: "en")
+        getCountriesData()
     }
     
-    func getCountriesData(lang: String) {
-        locationData.getCountries(language: lang) { countries in
+    func getCountriesData() {
+        var language: String {
+            return Locale.current.languageCode ?? "en"
+        }
+        
+        locationData.getCountries(language: language) { countries in
             self.allCountries = countries
         }
     }

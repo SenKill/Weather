@@ -28,8 +28,8 @@ class CitySelectorViewModel: ObservableObject {
         addSubscribers()
     }
     
-    func getCitiesStart(lang: String, id: Int, query: String?, count: Int) {
-        self.getCities(language: lang, countryId: String(id), query: "", count: String(count)) { [weak self] (cities) in
+    func getCitiesStart(id: Int, query: String?, count: Int) {
+        self.getCities(countryId: String(id), query: "", count: String(count)) { [weak self] (cities) in
             self?.allCities = cities
         }
     }
@@ -69,12 +69,16 @@ class CitySelectorViewModel: ObservableObject {
         }
         
         let query = "&q=" + text
-        self.getCities(language: "en", countryId: String(country!.id), query: query, count: "50") { [weak self] (cities) in
+        self.getCities(countryId: String(country!.id), query: query, count: "50") { [weak self] (cities) in
             self?.cities = cities
         }
     }
     
-    private func getCities(language: String, countryId: String, query: String, count: String, completion: @escaping ([City]) -> ()) {
+    private func getCities(countryId: String, query: String, count: String, completion: @escaping ([City]) -> ()) {
+        var language: String {
+            return Locale.current.languageCode ?? "en"
+        }
+        
         guard let url = URL(string: "https://api.vk.com/method/database.getCities?access_token=\(Tokens.vkAPI.rawValue)&country_id=\(countryId)\(query)&need_all=0&count=\(count)&lang=\(language)&v=5.131") else {
                 print("Wrong url")
                 return }
