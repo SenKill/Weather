@@ -19,7 +19,7 @@ class CitySelectorViewModel: ObservableObject {
     @Published var showCityView = false
     @Published var navigateToMain = false
     @Published var showAlert = false
-    @Published var selectedCity: City?
+    @Published var selectedCity: City? = nil
     @Published var dismissLoadingView = false
     
     var cityCancellables = Set<AnyCancellable>()
@@ -32,13 +32,6 @@ class CitySelectorViewModel: ObservableObject {
         self.getCities(countryId: String(id), query: "", count: String(count)) { [weak self] (cities) in
             self?.allCities = cities
         }
-    }
-    
-    func onDisappearAction() {
-        self.selectedCity = nil
-        self.showCityView = false
-        self.navigateToMain = false
-        self.showAlert = false
     }
     
     func selectCity(city: City) {
@@ -68,7 +61,10 @@ class CitySelectorViewModel: ObservableObject {
             return
         }
         
-        let query = "&q=" + text
+        var query: String {
+            return "&q=" + text
+        }
+        
         self.getCities(countryId: String(country!.id), query: query, count: "50") { [weak self] (cities) in
             self?.cities = cities
         }
@@ -79,7 +75,7 @@ class CitySelectorViewModel: ObservableObject {
             return Locale.current.languageCode ?? "en"
         }
         
-        guard let url = URL(string: "https://api.vk.com/method/database.getCities?access_token=\(Tokens.vkAPI.rawValue)&country_id=\(countryId)\(query)&need_all=0&count=\(count)&lang=\(language)&v=5.131") else {
+        guard let url = URL(string: "https://api.vk.com/method/database.getCities?access_token=\(Tokens.vkAPI.rawValue)&country_id=\(countryId)\(query)&need_all=0&count=\(count)&lang=\(language)&v=5.131".encodeUrl) else {
                 print("Wrong url")
                 return }
         

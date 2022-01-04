@@ -36,9 +36,6 @@ struct CitySelectorLoadingView: View {
                         label: { EmptyView() }
                     )
                 )
-                .onDisappear {
-                    viewModel.onDisappearAction()
-                }
         }
         .navigationBarHidden(true)
     }

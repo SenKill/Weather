@@ -34,6 +34,7 @@
 		F78F509627819A870016806E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F78F509827819A870016806E /* Localizable.strings */; };
 		F7A526232782E7A300680F68 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A526222782E7A300680F68 /* Int.swift */; };
 		F7CCA5042760C35400EB676D /* CitySelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CCA5032760C35400EB676D /* CitySelectorView.swift */; };
+		F7CE0A3527848F6D009AC231 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CE0A3427848F6D009AC231 /* URL.swift */; };
 		F7F2814A2716BC2B00E3A7BB /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7F281492716BC2B00E3A7BB /* WeatherData.swift */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +69,7 @@
 		F78F509C27819A9B0016806E /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F7A526222782E7A300680F68 /* Int.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
 		F7CCA5032760C35400EB676D /* CitySelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitySelectorView.swift; sourceTree = "<group>"; };
+		F7CE0A3427848F6D009AC231 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		F7F281492716BC2B00E3A7BB /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -158,6 +160,7 @@
 				F77C88B3275B7E5000516175 /* UIApplication.swift */,
 				F78F5089278198C60016806E /* String.swift */,
 				F7A526222782E7A300680F68 /* Int.swift */,
+				F7CE0A3427848F6D009AC231 /* URL.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -314,6 +317,7 @@
 				F74C7AD9275F6AEC00DB63B1 /* CountrySelectorViewModel.swift in Sources */,
 				F77C88B4275B7E5000516175 /* UIApplication.swift in Sources */,
 				F715240D274B731D00FB0447 /* DailyForecastView.swift in Sources */,
+				F7CE0A3527848F6D009AC231 /* URL.swift in Sources */,
 				F7257EA727081F7D005C5076 /* WeatherMainView.swift in Sources */,
 				F78F508A278198C60016806E /* String.swift in Sources */,
 				F7F2814A2716BC2B00E3A7BB /* WeatherData.swift in Sources */,
