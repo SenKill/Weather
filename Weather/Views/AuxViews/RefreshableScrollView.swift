@@ -33,7 +33,7 @@ struct RefreshableScrollView<Content: View>: UIViewRepresentable {
         setUpView(uiscrollView: uiscrollView)
         
         uiscrollView.refreshControl = refreshControl
-        
+        uiscrollView.showsVerticalScrollIndicator = false
         return uiscrollView
     }
     

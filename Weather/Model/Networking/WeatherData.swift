@@ -109,7 +109,8 @@ final class WeatherData {
             }
             
             guard let httpResopnce = response as? HTTPURLResponse,(200...299).contains(httpResopnce.statusCode) else {
-                print("Error with response(WeatherData), status code: \(response!)")
+                print("Error with response(WeatherData), status code: \(response.debugDescription)")
+                // \(response ?? URLResponse.init())")
                 return
             }
             
