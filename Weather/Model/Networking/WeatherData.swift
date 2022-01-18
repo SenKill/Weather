@@ -123,8 +123,4 @@ final class WeatherData {
         }
         .resume()
     }
-    
-    func cityToCoordinates(city: String) {
-        
-    }
 }
