@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="19H1323" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="CurrentWeather" representedClassName="CurrentWeather" syncable="YES" codeGenerationType="class">
+    <entity name="CurrentWeather" representedClassName=".CurrentWeather" syncable="YES" codeGenerationType="category">
         <attribute name="clouds" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="dew_point" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="dt" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="dt" attributeType="Integer 32" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="feels_like" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="humidity" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="pressure" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="sunrise" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="sunset" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="temp" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="temp" attributeType="Float" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="uvi" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="visibility" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="wind_deg" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="wind_speed" attributeType="Float" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="weather" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WeatherDescription" inverseName="currentWeather" inverseEntity="WeatherDescription"/>
-        <relationship name="weatherModel" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WeatherModel" inverseName="current" inverseEntity="WeatherModel"/>
+        <relationship name="weather" toMany="YES" deletionRule="Nullify" destinationEntity="WeatherDescription" inverseName="currentWeather" inverseEntity="WeatherDescription"/>
+        <relationship name="weatherModel" maxCount="1" deletionRule="Nullify" destinationEntity="WeatherModel" inverseName="current" inverseEntity="WeatherModel"/>
     </entity>
-    <entity name="DailyWeather" representedClassName="DailyWeather" syncable="YES" codeGenerationType="class">
+    <entity name="DailyWeather" representedClassName=".DailyWeather" syncable="YES" codeGenerationType="category">
         <attribute name="clouds" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="dew_point" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="dt" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
@@ -27,18 +27,18 @@
         <attribute name="moonset" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="pop" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="pressure" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="rain" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="rain" optional="YES" attributeType="Float" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="sunrise" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="sunset" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="uvi" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="wind_deg" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="wind_speed" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <relationship name="feels_like" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TemperatureFeels" inverseName="dailyWeather" inverseEntity="TemperatureFeels"/>
-        <relationship name="temp" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Temperatute" inverseName="dailyWeather" inverseEntity="Temperatute"/>
-        <relationship name="weather" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WeatherDescription" inverseName="dailyWeather" inverseEntity="WeatherDescription"/>
-        <relationship name="weatherModel" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WeatherModel" inverseName="daily" inverseEntity="WeatherModel"/>
+        <relationship name="feels_like" maxCount="1" deletionRule="Nullify" destinationEntity="TemperatureFeels" inverseName="dailyWeather" inverseEntity="TemperatureFeels"/>
+        <relationship name="temp" maxCount="1" deletionRule="Nullify" destinationEntity="Temperature" inverseName="dailyWeather" inverseEntity="Temperature"/>
+        <relationship name="weather" toMany="YES" deletionRule="Nullify" destinationEntity="WeatherDescription" inverseName="dailyWeather" inverseEntity="WeatherDescription"/>
+        <relationship name="weatherModel" maxCount="1" deletionRule="Nullify" destinationEntity="WeatherModel" inverseName="daily" inverseEntity="WeatherModel"/>
     </entity>
-    <entity name="HourlyWeather" representedClassName="HourlyWeather" syncable="YES" codeGenerationType="class">
+    <entity name="HourlyWeather" representedClassName=".HourlyWeather" syncable="YES" codeGenerationType="category">
         <attribute name="clouds" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="dew_point" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="dt" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
@@ -52,50 +52,50 @@
         <attribute name="wind_deg" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="wind_gust" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="wind_speed" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <relationship name="weather" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WeatherDescription" inverseName="hourlyWeather" inverseEntity="WeatherDescription"/>
-        <relationship name="weatherModel" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WeatherModel" inverseName="hourly" inverseEntity="WeatherModel"/>
+        <relationship name="weather" toMany="YES" deletionRule="Nullify" destinationEntity="WeatherDescription" inverseName="hourlyWeather" inverseEntity="WeatherDescription"/>
+        <relationship name="weatherModel" maxCount="1" deletionRule="Nullify" destinationEntity="WeatherModel" inverseName="hourly" inverseEntity="WeatherModel"/>
     </entity>
-    <entity name="TemperatureFeels" representedClassName="TemperatureFeels" syncable="YES" codeGenerationType="class">
-        <attribute name="day" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="eve" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="morn" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <attribute name="night" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <relationship name="dailyWeather" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DailyWeather" inverseName="feels_like" inverseEntity="DailyWeather"/>
-    </entity>
-    <entity name="Temperatute" representedClassName="Temperatute" syncable="YES" codeGenerationType="class">
+    <entity name="Temperature" representedClassName=".Temperature" syncable="YES" codeGenerationType="category">
         <attribute name="day" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="eve" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="max" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="min" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="morn" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="night" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <relationship name="dailyWeather" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DailyWeather" inverseName="temp" inverseEntity="DailyWeather"/>
+        <relationship name="dailyWeather" maxCount="1" deletionRule="Nullify" destinationEntity="DailyWeather" inverseName="temp" inverseEntity="DailyWeather"/>
     </entity>
-    <entity name="WeatherDescription" representedClassName="WeatherDescription" syncable="YES" codeGenerationType="class">
+    <entity name="TemperatureFeels" representedClassName=".TemperatureFeels" syncable="YES" codeGenerationType="category">
+        <attribute name="day" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="eve" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="morn" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="night" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="dailyWeather" maxCount="1" deletionRule="Nullify" destinationEntity="DailyWeather" inverseName="feels_like" inverseEntity="DailyWeather"/>
+    </entity>
+    <entity name="WeatherDescription" representedClassName=".WeatherDescription" syncable="YES" codeGenerationType="category">
         <attribute name="icon" attributeType="String"/>
         <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="main" attributeType="String"/>
         <attribute name="weatherDescription" attributeType="String"/>
-        <relationship name="currentWeather" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CurrentWeather" inverseName="weather" inverseEntity="CurrentWeather"/>
-        <relationship name="dailyWeather" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DailyWeather" inverseName="weather" inverseEntity="DailyWeather"/>
-        <relationship name="hourlyWeather" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HourlyWeather" inverseName="weather" inverseEntity="HourlyWeather"/>
+        <relationship name="currentWeather" maxCount="1" deletionRule="Nullify" destinationEntity="CurrentWeather" inverseName="weather" inverseEntity="CurrentWeather"/>
+        <relationship name="dailyWeather" maxCount="1" deletionRule="Nullify" destinationEntity="DailyWeather" inverseName="weather" inverseEntity="DailyWeather"/>
+        <relationship name="hourlyWeather" maxCount="1" deletionRule="Nullify" destinationEntity="HourlyWeather" inverseName="weather" inverseEntity="HourlyWeather"/>
     </entity>
-    <entity name="WeatherModel" representedClassName="WeatherModel" syncable="YES" codeGenerationType="class">
+    <entity name="WeatherModel" representedClassName=".WeatherModel" syncable="YES" codeGenerationType="category">
         <attribute name="lat" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="lon" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="timezone" attributeType="String"/>
         <attribute name="timezone_offset" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="current" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CurrentWeather" inverseName="weatherModel" inverseEntity="CurrentWeather"/>
-        <relationship name="daily" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="DailyWeather" inverseName="weatherModel" inverseEntity="DailyWeather"/>
-        <relationship name="hourly" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="HourlyWeather" inverseName="weatherModel" inverseEntity="HourlyWeather"/>
+        <relationship name="current" maxCount="1" deletionRule="Nullify" destinationEntity="CurrentWeather" inverseName="weatherModel" inverseEntity="CurrentWeather"/>
+        <relationship name="daily" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="DailyWeather" inverseName="weatherModel" inverseEntity="DailyWeather"/>
+        <relationship name="hourly" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="HourlyWeather" inverseName="weatherModel" inverseEntity="HourlyWeather"/>
     </entity>
     <elements>
-        <element name="WeatherModel" positionX="-63" positionY="-18" width="128" height="28"/>
-        <element name="HourlyWeather" positionX="-54" positionY="-9" width="128" height="28"/>
-        <element name="WeatherDescription" positionX="-36" positionY="9" width="128" height="28"/>
-        <element name="CurrentWeather" positionX="-18" positionY="27" width="128" height="28"/>
-        <element name="Temperatute" positionX="0" positionY="45" width="128" height="28"/>
-        <element name="TemperatureFeels" positionX="18" positionY="63" width="128" height="28"/>
-        <element name="DailyWeather" positionX="36" positionY="81" width="128" height="28"/>
+        <element name="CurrentWeather" positionX="-293.3828125" positionY="28.984375" width="128" height="268"/>
+        <element name="DailyWeather" positionX="208.390625" positionY="43.25390625" width="128" height="328"/>
+        <element name="HourlyWeather" positionX="73.49609375" positionY="49.55859375" width="128" height="268"/>
+        <element name="Temperature" positionX="344.54296875" positionY="266.55078125" width="128" height="148"/>
+        <element name="TemperatureFeels" positionX="344.0859375" positionY="136.70703125" width="128" height="118"/>
+        <element name="WeatherDescription" positionX="-99.02734375" positionY="70.60546875" width="128" height="148"/>
+        <element name="WeatherModel" positionX="-106.0546875" positionY="274.984375" width="128" height="148"/>
     </elements>
 </model>

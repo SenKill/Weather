@@ -12,6 +12,7 @@ struct DailyForecastView: View {
     let timeZone: TimeZone
     
     var body: some View {
+        
         ScrollView(.vertical, showsIndicators: false) {
             ForEach(0 ..< daily.count) { column in
                 ZStack(alignment: .center) {
@@ -19,12 +20,12 @@ struct DailyForecastView: View {
                         Text(Double(daily[column].dt).getDateDaily(timeZone: timeZone))
                         Spacer()
                         HStack {
-                            Text(daily[column].temp.day.tempToString())
-                            Text(daily[column].temp.night.tempToString())
+                            Text(daily[column].temp!.day.tempToString())
+                            Text(daily[column].temp!.night.tempToString())
                                 .foregroundColor(Color.secondary)
                         }
                     }
-                    Image(daily[column].weather[0].icon)
+                    Image((daily[column].weather?.anyObject() as! WeatherDescription).icon!)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 40, height: 40)

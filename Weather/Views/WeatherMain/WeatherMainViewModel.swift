@@ -7,33 +7,66 @@
 
 import Foundation
 import CoreLocation
+import CoreData
 
 final class WeatherMainViewModel: ObservableObject {
-    @Published var timeZone: TimeZone?
+    @Published var timeZone: TimeZone!
     @Published var cityName: String = ""
     
-    @Published var current: CurrentWeather?
+    @Published var current: CurrentWeather!
     @Published var hourly: [HourlyWeather] = []
     @Published var daily: [DailyWeather] = []
+    @Published var weatherDescription: WeatherDescription!
     
-    @Published var coordinate: CLLocationCoordinate2D? = nil
+    @Published var coordinate: CLLocationCoordinate2D!
     @Published var isLoading: Bool = true
     
     @Published var alertMessage: String = ""
     @Published var alert: Bool = false
     
     private var locationManager = LocationManager()
+    private lazy var coreDataStack = CoreDataStack(modelName: "Weather")
     
     init() {
-        /*
-        let defaults = UserDefaults.standard
-        // TODO: Save latest data to UserDefaults or CoreData
+        self.loadFromCoreData()
+    }
+    
+    private func assignData(data: WeatherModel) {
+        guard let timeZone = data.timezone,
+              let current = data.current,
+              let hourly = data.hourly?.array as? [HourlyWeather],
+              let daily = data.daily?.array as? [DailyWeather],
+              let description = data.current?.weather?.anyObject() as? WeatherDescription else {
+            print("ERROR: Weather data is nil")
+            return
+        }
         
-        if let current: CurrentWeather = defaults.object(forKey: "current") as? CurrentWeather {
-            print(Date(timeIntervalSinceReferenceDate: TimeInterval(current.dt)))
-        }*/
+        self.timeZone = TimeZone(identifier: timeZone)
+        self.current = current
+        self.hourly = hourly
+        self.daily = daily
+        self.weatherDescription = description
+        self.isLoading = false
+    }
+    
+    func loadFromCoreData() {
+        self.isLoading = true
+        let fetchRequest: NSFetchRequest<WeatherModel> = NSFetchRequest(entityName: "WeatherModel")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(WeatherModel.current.dt), ascending: false)]
+        fetchRequest.fetchLimit = 1
         
-        self.loadData(withCity: nil)
+        do {
+            let data = try coreDataStack.managedContext.fetch(fetchRequest)
+            guard let lastData = data.last else {
+                print("Fetch error: last data cannot found")
+                self.loadData(withCity: nil)
+                return
+            }
+            
+            self.assignData(data: lastData)
+        } catch let error as NSError {
+            print("Fetch error: \(error), \(error.userInfo)")
+        }
     }
     
     func loadData(withCity city: City?) {
@@ -59,15 +92,16 @@ final class WeatherMainViewModel: ObservableObject {
             return Locale.current.languageCode ?? "en"
         }
         
-        WeatherData().getData(latitude: String(coordinate.latitude), longtitude: String(coordinate.longitude), units: units, language: language) { data in
-            self.timeZone = TimeZone(identifier: data.timezone)
-                    
-            self.current = data.current
-            self.hourly = data.hourly
-            self.daily = data.daily
-            
-            self.coordinatesToCity(coordinates: coordinate)
+        WeatherData().getData(
+            latitude: String(coordinate.latitude),
+            longtitude: String(coordinate.longitude),
+            units: units,
+            language: language,
+            context: self.coreDataStack.managedContext) { data in
+            self.assignData(data: data)
         }
+        
+        self.coordinatesToCity(coordinates: coordinate)
     }
     
     
@@ -95,7 +129,6 @@ final class WeatherMainViewModel: ObservableObject {
         self.cityName = (city ?? "City not found") + ", " + country
         
         // self.saveData()
-        self.isLoading = false
     }
     
     

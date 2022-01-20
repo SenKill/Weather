@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Int {
+extension Int32 {
     var addUnits: String {
         return String(self) + "hpa".localized()
     }
