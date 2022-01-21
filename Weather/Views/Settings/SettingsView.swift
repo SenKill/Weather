@@ -15,12 +15,13 @@ struct SettingsView: View {
     var body: some View {
         List {
             Section(header: Text("main")) {
-                NavigationLink(
-                    destination: CountrySelectorView(),
-                    label: {
+                NavigationLink(destination: CountrySelectorView()) {
+                    Label {
                         Text("changeCity")
+                    } icon: {
+                        Image(systemName: "globe")
                     }
-                )
+                }
 
                 HStack {
                     Picker(viewModel.units[viewModel.selectedUnit]!, selection: $viewModel.selectedUnit) {

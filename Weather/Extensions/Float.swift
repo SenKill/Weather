@@ -12,14 +12,13 @@ extension Float {
         return UserDefaults.standard.string(forKey: "unit") ?? "metric"
     }
     
-    func tempToString() -> String {
+    func tempToString(_ withLetter: Bool) -> String {
         let temp = self
         var result: String = String(format: "%.0f", temp)
+        result += "º"
         
-        if units == "metric" {
-            result += "º"
-        } else {
-            result += "ºF"
+        if units == "imperial" && withLetter {
+            result += "F"
         }
         return result
     }

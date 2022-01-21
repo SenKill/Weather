@@ -26,6 +26,7 @@ final class WeatherMainViewModel: ObservableObject {
     
     private var locationManager = LocationManager()
     private lazy var coreDataStack = CoreDataStack(modelName: "Weather")
+    private let defaults = UserDefaults.standard
     
     init() {
         self.loadFromCoreData()
@@ -46,6 +47,14 @@ final class WeatherMainViewModel: ObservableObject {
         self.hourly = hourly
         self.daily = daily
         self.weatherDescription = description
+        
+        let coordinates = CLLocationCoordinate2D(latitude: Double(data.lat), longitude: Double(data.lon))
+        self.coordinate = coordinates
+        
+        if let city = defaults.string(forKey: "city") {
+            self.cityName = city
+        }
+        
         self.isLoading = false
     }
     
@@ -85,14 +94,14 @@ final class WeatherMainViewModel: ObservableObject {
     
     func bindWeatherData(coordinate: CLLocationCoordinate2D) {
         var units: String {
-            return UserDefaults.standard.string(forKey: "unit") ?? "metric"
+            UserDefaults.standard.string(forKey: "unit") ?? "metric"
         }
         
         var language: String {
-            return Locale.current.languageCode ?? "en"
+            Locale.current.languageCode ?? "en"
         }
         
-        WeatherData().getData(
+        WeatherData.getData(
             latitude: String(coordinate.latitude),
             longtitude: String(coordinate.longitude),
             units: units,
@@ -126,9 +135,9 @@ final class WeatherMainViewModel: ObservableObject {
             return
         }
         let city = placemark.locality ?? placemark.subAdministrativeArea ?? placemark.administrativeArea
-        self.cityName = (city ?? "City not found") + ", " + country
-        
-        // self.saveData()
+        let location = (city ?? "City not found") + ", " + country
+        self.cityName = location
+        defaults.setValue(location, forKey: "city")
     }
     
     

@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 struct CountryModel: Codable {
     let response: CountryResponse
 }
@@ -38,7 +39,6 @@ struct City: Codable, Identifiable, Equatable {
     var region: String?
     let important: Int?
 }
-
 
 
 final class LocationData {

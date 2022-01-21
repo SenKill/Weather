@@ -136,9 +136,9 @@
 				F76F70402747B37000A4A198 /* Extensions */,
 				F77EA94A2712C62B000B8883 /* Views */,
 				F7C3F3A627142AA70000FFED /* Model */,
+				F7257E7E27081F31005C5076 /* Preview Content */,
 				F7257E7C27081F31005C5076 /* Assets.xcassets */,
 				F7257E8127081F31005C5076 /* Info.plist */,
-				F7257E7E27081F31005C5076 /* Preview Content */,
 				F78F509827819A870016806E /* Localizable.strings */,
 				F763FA65278C21C4000CD1BD /* LaunchScreen.storyboard */,
 			);
