@@ -106,8 +106,17 @@ final class WeatherMainViewModel: ObservableObject {
             longtitude: String(coordinate.longitude),
             units: units,
             language: language,
-            context: self.coreDataStack.managedContext) { data in
-            self.assignData(data: data)
+            context: coreDataStack.managedContext) { result in
+            switch result {
+            case .success(let data):
+                self.assignData(data: data)
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self.alertMessage = error.localizedDescription
+                    self.alert.toggle()
+                    self.isLoading = false
+                }
+            }
         }
         
         self.coordinatesToCity(coordinates: coordinate)

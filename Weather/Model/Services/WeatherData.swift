@@ -10,7 +10,7 @@ import CoreData
 
 
 final class WeatherData {
-    static func getData(latitude: String, longtitude: String, units: String, language: String, context: NSManagedObjectContext, completion: @escaping (WeatherModel) -> ()) {
+    static func getData(latitude: String, longtitude: String, units: String, language: String, context: NSManagedObjectContext, completion: @escaping (Result<WeatherModel, Error>) -> ()) {
         let decoder = JSONDecoder()
         decoder.userInfo[CodingUserInfoKey.managedObjectContext] = context
         
@@ -20,19 +20,17 @@ final class WeatherData {
         
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             if let error = error {
-                print("Error with getting weather data: \(error.localizedDescription)")
+                completion(.failure(error))
             }
             
             guard let httpResopnce = response as? HTTPURLResponse,(200...299).contains(httpResopnce.statusCode) else {
-                print("Error with response(WeatherData), status code: \(response.debugDescription)")
-                // \(response ?? URLResponse.init())")
                 return
             }
             
             if let data = data {
                 let weatherData = try! decoder.decode(WeatherModel.self, from: data)
                 DispatchQueue.main.async {
-                    completion(weatherData)
+                    completion(.success(weatherData))
                 }
             }
         }
