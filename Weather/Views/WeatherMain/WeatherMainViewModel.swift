@@ -58,7 +58,7 @@ final class WeatherMainViewModel: ObservableObject {
         self.isLoading = false
     }
     
-    func loadFromCoreData() {
+    private func loadFromCoreData() {
         self.isLoading = true
         let fetchRequest: NSFetchRequest<WeatherModel> = NSFetchRequest(entityName: "WeatherModel")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(WeatherModel.current.dt), ascending: false)]
@@ -179,19 +179,6 @@ final class WeatherMainViewModel: ObservableObject {
                     print("Error with converting city to coordinates")
                 }
             }
-        }
-    }
-    
-    private func saveData() {
-        let queue = DispatchQueue(label: "save.weatherdata")
-        let defaults = UserDefaults.standard
-        
-        queue.async {
-            defaults.setValue(self.timeZone, forKey: "timezone")
-            defaults.setValue(self.cityName, forKey: "cityname")
-            defaults.setValue(self.current, forKey: "current")
-            defaults.setValue(self.daily, forKey: "daily")
-            defaults.setValue(self.hourly, forKey: "hourly")
         }
     }
 }
