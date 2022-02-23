@@ -10,7 +10,7 @@ import Combine
 
 class CountrySelectorViewModel: ObservableObject {
     
-    @Published var countries: [Country] = []
+    @Published var groupedCountries: [String: [Country]] = [:]
     @Published var allCountries: [Country] = []
     
     @Published var countrySearchText: String = ""
@@ -25,6 +25,13 @@ class CountrySelectorViewModel: ObservableObject {
     init() {
         addSubscribers()
         getCountriesData()
+    }
+    
+    func groupContries(_ countriesArray: [Country]) {
+        groupedCountries = Dictionary(
+            grouping: countriesArray,
+            by: {$0.title.first?.uppercased() ?? ""}
+        ).mapValues{$0}
     }
     
     func getCountriesData() {
@@ -44,7 +51,7 @@ class CountrySelectorViewModel: ObservableObject {
             .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
             .map(filterCountries)
             .sink { [weak self] (returnedCountries) in
-                self?.countries = returnedCountries
+                self?.groupContries(returnedCountries)
             }
             .store(in: &countryCancellables)
     }

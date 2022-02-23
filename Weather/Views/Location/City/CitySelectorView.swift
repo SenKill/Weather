@@ -46,7 +46,15 @@ struct CitySelectorView: View {
     
     var body: some View {
         VStack {
-            SearchBarView(searchText: $viewModel.citySearchText)
+            HStack {
+                SearchBarView(searchText: $viewModel.citySearchText)
+                Button {
+                    viewModel.showCityView = false
+                } label: {
+                    Text("Cancel")
+                }
+                .padding(EdgeInsets.init(top: 10, leading: 0, bottom: 0, trailing: 10))
+            }
             List(viewModel.cities) { city in
                 Text(city.title)
                     .frame(maxWidth: .infinity)

@@ -10,9 +10,8 @@ import CoreData
 
 
 final class WeatherData {
-    static func getData(latitude: String, longtitude: String, units: String, language: String, context: NSManagedObjectContext, completion: @escaping (Result<WeatherModel, Error>) -> ()) {
+    static func getData(latitude: String, longtitude: String, units: String, language: String, completion: @escaping (Result<WeatherModel, Error>) -> ()) {
         let decoder = JSONDecoder()
-        decoder.userInfo[CodingUserInfoKey.managedObjectContext] = context
         
         guard let url = URL(string: "https://api.openweathermap.org/data/2.5/onecall?lat=\(latitude)&lon=\(longtitude)&exclude=minutely,alerts&units=\(units)&lang=\(language)&appid=a0c0a6cb62d01e7faf2d0aa659b1b981") else {
             print("Wrong URL")

@@ -90,8 +90,8 @@ class CitySelectorViewModel: ObservableObject {
                 return data
             }
             .decode(type: CityModel.self, decoder: JSONDecoder())
-            .sink { (completion) in
-                print("COMPLETION: \(completion)")
+            .sink { _ in
+                
             } receiveValue: { [weak self] (returnedCities) in
                 self?.cities = returnedCities.response.items
                 completion(returnedCities.response.items)

@@ -25,8 +25,9 @@ final class WeatherMainViewModel: ObservableObject {
     @Published var alert: Bool = false
     
     private var locationManager = LocationManager()
-    private lazy var coreDataStack = CoreDataStack(modelName: "Weather")
+    // private lazy var coreDataStack = CoreDataStack(modelName: "Weather")
     private let defaults = UserDefaults.standard
+    
     
     init() {
         self.loadFromCoreData()
@@ -65,9 +66,8 @@ final class WeatherMainViewModel: ObservableObject {
         fetchRequest.fetchLimit = 1
         
         do {
-            let data = try coreDataStack.managedContext.fetch(fetchRequest)
+            let data = try CoreDataStack.shared.managedContext.fetch(fetchRequest)
             guard let lastData = data.last else {
-                print("Fetch error: last data cannot found")
                 self.loadData(withCity: nil)
                 return
             }
@@ -105,8 +105,7 @@ final class WeatherMainViewModel: ObservableObject {
             latitude: String(coordinate.latitude),
             longtitude: String(coordinate.longitude),
             units: units,
-            language: language,
-            context: coreDataStack.managedContext) { result in
+            language: language) { result in
             switch result {
             case .success(let data):
                 self.assignData(data: data)
@@ -121,7 +120,6 @@ final class WeatherMainViewModel: ObservableObject {
         
         self.coordinatesToCity(coordinates: coordinate)
     }
-    
     
     private func coordinatesToCity(coordinates: CLLocationCoordinate2D) {
         let geocoder = CLGeocoder()
@@ -149,7 +147,6 @@ final class WeatherMainViewModel: ObservableObject {
         defaults.setValue(location, forKey: "city")
     }
     
-    
     private func getUserCoordinates() {
         DispatchQueue.main.async {
             let coordinate = self.locationManager.location != nil ? self.locationManager.location!.coordinate: CLLocationCoordinate2D()
@@ -166,7 +163,6 @@ final class WeatherMainViewModel: ObservableObject {
                 if let coordinate = self.coordinate {
                     self.bindWeatherData(coordinate: coordinate)
                 }
-                print(error!.localizedDescription)
                 self.alertMessage = "cannotFindCityError".localized()
                 self.alert.toggle()
                 return
@@ -175,8 +171,6 @@ final class WeatherMainViewModel: ObservableObject {
                 if let coordinates = placemark.location?.coordinate {
                     self.coordinate = coordinates
                     self.bindWeatherData(coordinate: coordinates)
-                } else {
-                    print("Error with converting city to coordinates")
                 }
             }
         }

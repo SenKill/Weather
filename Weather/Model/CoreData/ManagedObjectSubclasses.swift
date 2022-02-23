@@ -8,9 +8,6 @@
 import CoreData
 import Foundation
 
-enum DecoderConfigurationError: Error {
-    case missingManagedObjectContext
-}
 
 class WeatherModel: NSManagedObject, Decodable {
     enum CodingKeys: CodingKey {
@@ -18,9 +15,7 @@ class WeatherModel: NSManagedObject, Decodable {
     }
     
     required convenience init(from decoder: Decoder) throws {
-        guard let context = decoder.userInfo[CodingUserInfoKey.managedObjectContext] as? NSManagedObjectContext else {
-            throw DecoderConfigurationError.missingManagedObjectContext
-        }
+        let context = CoreDataStack.shared.managedContext
         
         self.init(context: context)
         
@@ -50,9 +45,7 @@ class WeatherDescription: NSManagedObject, Decodable {
     }
     
     required convenience init(from decoder: Decoder) throws {
-        guard let context = decoder.userInfo[CodingUserInfoKey.managedObjectContext] as? NSManagedObjectContext else {
-            throw DecoderConfigurationError.missingManagedObjectContext
-        }
+        let context = CoreDataStack.shared.managedContext
         
         self.init(context: context)
         
@@ -71,9 +64,7 @@ class Temperature: NSManagedObject, Decodable {
     }
     
     required convenience init(from decoder: Decoder) throws {
-        guard let context = decoder.userInfo[CodingUserInfoKey.managedObjectContext] as? NSManagedObjectContext else {
-            throw DecoderConfigurationError.missingManagedObjectContext
-        }
+        let context = CoreDataStack.shared.managedContext
         
         self.init(context: context)
         
@@ -94,9 +85,7 @@ class TemperatureFeels: NSManagedObject, Decodable {
     }
     
     required convenience init(from decoder: Decoder) throws {
-        guard let context = decoder.userInfo[CodingUserInfoKey.managedObjectContext] as? NSManagedObjectContext else {
-            throw DecoderConfigurationError.missingManagedObjectContext
-        }
+        let context = CoreDataStack.shared.managedContext
         
         self.init(context: context)
         
@@ -115,9 +104,7 @@ class HourlyWeather: NSManagedObject, Decodable {
     }
     
     required convenience init(from decoder: Decoder) throws {
-        guard let context = decoder.userInfo[CodingUserInfoKey.managedObjectContext] as? NSManagedObjectContext else {
-            throw DecoderConfigurationError.missingManagedObjectContext
-        }
+        let context = CoreDataStack.shared.managedContext
         
         self.init(context: context)
         
@@ -146,9 +133,7 @@ class DailyWeather: NSManagedObject, Decodable {
     }
     
     required convenience init(from decoder: Decoder) throws {
-        guard let context = decoder.userInfo[CodingUserInfoKey.managedObjectContext] as? NSManagedObjectContext else {
-            throw DecoderConfigurationError.missingManagedObjectContext
-        }
+        let context = CoreDataStack.shared.managedContext
         
         self.init(context: context)
         
@@ -185,9 +170,7 @@ class CurrentWeather: NSManagedObject, Decodable {
     }
     
     required convenience init(from decoder: Decoder) throws {
-        guard let context = decoder.userInfo[CodingUserInfoKey.managedObjectContext] as? NSManagedObjectContext else {
-            throw DecoderConfigurationError.missingManagedObjectContext
-        }
+        let context = CoreDataStack.shared.managedContext
         
         self.init(context: context)
         

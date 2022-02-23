@@ -36,13 +36,13 @@ struct SearchBarView: View {
         // MARK: Search bar cusomization
         .font(.headline)
         .frame(maxWidth: .infinity)
-        .padding(8)
+        .padding(10)
         .background(
-            RoundedRectangle(cornerRadius: 25)
+            RoundedRectangle(cornerRadius: 15)
                 .fill(Color.theme.defaultBackground)
                 .shadow(
-                    color: Color.primary.opacity(0.15),
-                    radius: 10, x: 0, y: 0)
+                    color: Color.primary.opacity(0.4),
+                    radius: 3, x: 0, y: 3)
         )
         .padding([.top, .leading, .trailing], 15)
     }

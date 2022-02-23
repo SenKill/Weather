@@ -9,6 +9,8 @@ import Foundation
 import CoreData
 
 class CoreDataStack {
+    static let shared = CoreDataStack(modelName: "Weather")
+    
     private let modelName: String
     
     init(modelName: String) {
