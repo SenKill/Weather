@@ -20,8 +20,8 @@ struct DailyForecastView: View {
                         Text(Double(daily[column].dt).getDateDaily(timeZone: timeZone))
                         Spacer()
                         HStack {
-                            Text(daily[column].temp!.day.tempToString(true))
-                            Text(daily[column].temp!.night.tempToString(true))
+                            Text(daily[column].temp!.day.tempToString())
+                            Text(daily[column].temp!.night.tempToString())
                                 .foregroundColor(Color.secondary)
                         }
                     }

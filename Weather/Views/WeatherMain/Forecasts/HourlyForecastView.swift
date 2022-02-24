@@ -23,7 +23,7 @@ struct HourlyForecastView: View {
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 60, height: 60, alignment: .center)
                         
-                        Text(hourly[column].temp.tempToString(true))
+                        Text(hourly[column].temp.tempToString())
                             .font(.title3)
                         
                         Text(hourly[column].wind_speed.windToString())

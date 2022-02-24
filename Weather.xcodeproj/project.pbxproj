@@ -131,6 +131,7 @@
 			children = (
 				F7257E7827081F30005C5076 /* WeatherApp.swift */,
 				F7257E7A27081F30005C5076 /* ContentView.swift */,
+				F76F70402747B37000A4A198 /* Extensions */,
 				F77EA94A2712C62B000B8883 /* Views */,
 				F7C3F3A627142AA70000FFED /* Model */,
 				F7257E7E27081F31005C5076 /* Preview Content */,
@@ -229,7 +230,6 @@
 				F748B1E52796C8E3008593C4 /* CoreData */,
 				F7CC6F1E277EE4AB002D7F81 /* Services */,
 				F7CC6F15277EE422002D7F81 /* AuxFiles */,
-				F76F70402747B37000A4A198 /* Extensions */,
 				F7580CCD2734E6F700773E6C /* LocationManager.swift */,
 			);
 			path = Model;

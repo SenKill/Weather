@@ -8,18 +8,14 @@
 import Foundation
 
 extension Float {
-    var units: String {
+    private var units: String {
         return UserDefaults.standard.string(forKey: "unit") ?? "metric"
     }
     
-    func tempToString(_ withLetter: Bool) -> String {
+    func tempToString() -> String {
         let temp = self
         var result: String = String(format: "%.0f", temp)
         result += "º"
-        
-        if units == "imperial" && withLetter {
-            result += "F"
-        }
         return result
     }
     

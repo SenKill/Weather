@@ -62,17 +62,23 @@ final class WeatherMainViewModel: ObservableObject {
     private func loadFromCoreData() {
         self.isLoading = true
         let fetchRequest: NSFetchRequest<WeatherModel> = NSFetchRequest(entityName: "WeatherModel")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(WeatherModel.current.dt), ascending: false)]
-        fetchRequest.fetchLimit = 1
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(WeatherModel.current.dt), ascending: true)]
+        // fetchRequest.fetchLimit = 1
         
         do {
             let data = try CoreDataStack.shared.managedContext.fetch(fetchRequest)
+            
             guard let lastData = data.last else {
                 self.loadData(withCity: nil)
                 return
             }
             
             self.assignData(data: lastData)
+            
+            for object in data where object != data.last {
+                CoreDataStack.shared.managedContext.delete(object)
+            }
+            CoreDataStack.shared.saveContext()
         } catch let error as NSError {
             print("Fetch error: \(error), \(error.userInfo)")
         }

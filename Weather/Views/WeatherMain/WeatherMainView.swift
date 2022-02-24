@@ -82,7 +82,7 @@ struct WeatherMainView: View {
                             .padding()
                             VStack {
                                 HStack {
-                                    Text(String(viewModel.current.temp.tempToString(false)))
+                                    Text(String(viewModel.current.temp.tempToString()))
                                         .font(.system(size: 80,
                                                       weight: .semibold,
                                                       design: .default))
@@ -91,8 +91,8 @@ struct WeatherMainView: View {
                                     VStack(alignment: .leading) {
                                         Group {
                                             Text(viewModel.weatherDescription.main!)
-                                            Text("H: " + viewModel.daily[0].temp!.max.tempToString(true))
-                                            Text("L: " + viewModel.daily[0].temp!.min.tempToString(true))
+                                            Text("H: " + viewModel.daily[0].temp!.max.tempToString())
+                                            Text("L: " + viewModel.daily[0].temp!.min.tempToString())
                                         }
                                         .font(.system(size: 20, weight: .medium, design: .default))
                                         .padding(2)
@@ -114,7 +114,7 @@ struct WeatherMainView: View {
                                             VStack(alignment: .leading) {
                                                 Text(viewModel.current.wind_speed.windToString())
                                                 Text("\(viewModel.current.humidity)%")
-                                                Text(viewModel.current.feels_like.tempToString(true))
+                                                Text(viewModel.current.feels_like.tempToString())
                                                 Text("\(viewModel.current.pressure.addUnits)")
                                             }
                                             .font(.title3)
