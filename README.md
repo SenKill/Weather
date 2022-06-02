@@ -44,3 +44,8 @@ Units changing and russian localization...
 
 ![](https://github.com/SenKill/Weather/blob/120169d5bf6c793ad19caa7dd5e15bf32f864cd2/GifsAndPictures/UnitsChanging.gif)
 <img src="https://github.com/SenKill/Weather/blob/120169d5bf6c793ad19caa7dd5e15bf32f864cd2/GifsAndPictures/RussianLocalization.png" width="360"/>
+
+## License
+### ATTENTION!
+
+The app is just for presentation, not for a contribution, all the source code is under the default copyright laws of the GitHub so please do not reproduce, distribute, or create derivative works from my work.
