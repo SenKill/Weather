@@ -41,6 +41,19 @@ struct SettingsView: View {
                         Image(systemName: "location.fill")
                     }
                 }
+                
+                Button {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
+                } label: {
+                    Label {
+                        Text("lang")
+                            .foregroundColor(.primary)
+                    } icon: {
+                        Image(systemName: "globe")
+                    }
+                }
             }
         }
         .navigationTitle("settings")
