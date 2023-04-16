@@ -10,19 +10,29 @@ import CoreData
 
 
 final class WeatherData {
-    static func getData(latitude: String, longtitude: String, units: String, language: String, completion: @escaping (Result<WeatherModel, Error>) -> ()) {
+    static func getData(latitude: String, longtitude: String, units: String, language: String, completion: @escaping (Result<WeatherModel, NetworkError>) -> ()) {
         let decoder = JSONDecoder()
+        let appId = Tokens.openWeatherMap.rawValue
         
-        guard let url = URL(string: "https://api.openweathermap.org/data/2.5/onecall?lat=\(latitude)&lon=\(longtitude)&exclude=minutely,alerts&units=\(units)&lang=\(language)&appid=a0c0a6cb62d01e7faf2d0aa659b1b981") else {
-            print("Wrong URL")
-            return }
+        guard let url = URL(string: "https://api.openweathermap.org/data/2.5/onecall?lat=\(latitude)&lon=\(longtitude)&exclude=minutely,alerts&units=\(units)&lang=\(language)&appid=\(appId)") else {
+            completion(.failure(.wrongUrl))
+            return
+        }
+        print(url.absoluteString)
         
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             if let error = error {
-                completion(.failure(error))
+                completion(.failure(.someError(message: error.localizedDescription)))
             }
             
-            guard let httpResopnce = response as? HTTPURLResponse,(200...299).contains(httpResopnce.statusCode) else {
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(.noResponse))
+                return
+            }
+            
+            print("Status code: \(httpResponse.statusCode)")
+            if !(200...299).contains(httpResponse.statusCode) {
+                completion(.failure(.reponseError(statusCode: httpResponse.statusCode)))
                 return
             }
             
