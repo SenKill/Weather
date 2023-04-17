@@ -24,10 +24,9 @@ final class WeatherMainViewModel: ObservableObject {
     @Published var alertMessage: String = ""
     @Published var alert: Bool = false
     
-    private var locationManager = LocationManager()
-    // private lazy var coreDataStack = CoreDataStack(modelName: "Weather")
+    private let locationManager = LocationManager()
+    private let networkService = NetworkService()
     private let defaults = UserDefaults.standard
-    
     
     init() {
         self.loadFromCoreData()
@@ -63,7 +62,6 @@ final class WeatherMainViewModel: ObservableObject {
         self.isLoading = true
         let fetchRequest: NSFetchRequest<WeatherModel> = NSFetchRequest(entityName: "WeatherModel")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: #keyPath(WeatherModel.current.dt), ascending: true)]
-        // fetchRequest.fetchLimit = 1
         
         do {
             let data = try CoreDataStack.shared.managedContext.fetch(fetchRequest)
@@ -98,32 +96,27 @@ final class WeatherMainViewModel: ObservableObject {
         queue.async(execute: coordinateWorkItem)
     }
     
-    func bindWeatherData(coordinate: CLLocationCoordinate2D) {
+    func bindWeatherData(coordinate: CLLocationCoordinate2D, completion: (() -> Void)? = nil) {
         var units: String {
-            UserDefaults.standard.string(forKey: "unit") ?? "metric"
+            return UserDefaults.standard.string(forKey: "unit") ?? "metric"
         }
-        
-        var language: String {
-            Locale.current.languageCode ?? "en"
-        }
-        
-        WeatherData.getData(
-            latitude: String(coordinate.latitude),
-            longtitude: String(coordinate.longitude),
-            units: units,
-            language: language) { result in
+        networkService.makeRequest(.openWeatherOneCall(
+            lat: String(coordinate.latitude), lon: String(coordinate.longitude), units: units,
+            lang: Locale.current, token: Tokens.openWeatherMap), resultType: WeatherModel.self) { [weak self] result in
+            guard let `self` = self else { return }
+            DispatchQueue.main.async {
+                completion?()
+            }
             switch result {
             case .success(let data):
                 self.assignData(data: data)
             case .failure(let error):
-                DispatchQueue.main.async {
-                    self.alertMessage = error.localizedDescription
-                    self.alert.toggle()
-                    self.isLoading = false
-                }
+                print(error)
+                self.isLoading = false
+                self.alertMessage = error.description
+                self.alert.toggle()
             }
         }
-        
         self.coordinatesToCity(coordinates: coordinate)
     }
     
@@ -169,7 +162,7 @@ final class WeatherMainViewModel: ObservableObject {
                 if let coordinate = self.coordinate {
                     self.bindWeatherData(coordinate: coordinate)
                 }
-                self.alertMessage = "cannotFindCityError".localized()
+                self.alertMessage = "cannotFindCityError".localized
                 self.alert.toggle()
                 return
             }

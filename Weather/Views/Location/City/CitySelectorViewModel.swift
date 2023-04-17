@@ -11,7 +11,6 @@ import Combine
 class CitySelectorViewModel: ObservableObject {
     @Published var allCities: [City] = []
     @Published var cities: [City] = []
-    private var sortedCities: [City] = []
     
     @Published var citySearchText = ""
     @Published var country: Country?
@@ -22,14 +21,15 @@ class CitySelectorViewModel: ObservableObject {
     @Published var selectedCity: City? = nil
     @Published var dismissLoadingView = false
     
-    var cityCancellables = Set<AnyCancellable>()
+    private var cityCancellables = Set<AnyCancellable>()
+    private var sortedCities: [City] = []
     
     init() {
         addSubscribers()
     }
     
-    func getCitiesStart(id: Int, query: String?, count: Int) {
-        self.getCities(countryId: String(id), query: "", count: String(count)) { [weak self] (cities) in
+    func getCitiesStart(id: Int, count: Int) {
+        self.getCities(countryId: id, query: "", count: count) { [weak self] (cities) in
             self?.allCities = cities
         }
     }
@@ -61,24 +61,15 @@ class CitySelectorViewModel: ObservableObject {
             return
         }
         
-        var query: String {
-            return "&q=" + text
-        }
-        
-        self.getCities(countryId: String(country!.id), query: query, count: "50") { [weak self] (cities) in
+        self.getCities(countryId: country!.id, query: "&q=" + text, count: 50) { [weak self] (cities) in
             self?.cities = cities
         }
     }
     
-    private func getCities(countryId: String, query: String, count: String, completion: @escaping ([City]) -> ()) {
-        var language: String {
-            return Locale.current.languageCode ?? "en"
+    private func getCities(countryId: Int, query: String, count: Int, completion: @escaping ([City]) -> ()) {
+        guard let url = Endpoint.vkCities(token: Tokens.vk, countryId: countryId, query: query, count: count, lang: Locale.current).getUrlRequest() else {
+            return
         }
-        
-        guard let url = URL(string: "https://api.vk.com/method/database.getCities?access_token=\(Tokens.vkAPI.rawValue)&country_id=\(countryId)\(query)&need_all=0&count=\(count)&lang=\(language)&v=5.131".encodeUrl) else {
-                print("Wrong url")
-                return }
-        
         URLSession.shared.dataTaskPublisher(for: url)
             .subscribe(on: DispatchQueue.global(qos: .background))
             .receive(on: DispatchQueue.main)

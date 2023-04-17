@@ -8,18 +8,16 @@
 import Foundation
 import Combine
 
-class CountrySelectorViewModel: ObservableObject {
-    
+final class CountrySelectorViewModel: ObservableObject {
     @Published var groupedCountries: [String: [Country]] = [:]
     @Published var allCountries: [Country] = []
-    
     @Published var countrySearchText: String = ""
-    
-    private let locationData = LocationData()
-    
     @Published var showLoadingView: Bool = false
     @Published var selectedCountry: Country?
+    @Published var isAlertPresented: Bool = false
+    var alertMessage: String = ""
     
+    private let networkService = NetworkService()
     private var countryCancellables = Set<AnyCancellable>()
     
     init() {
@@ -35,12 +33,15 @@ class CountrySelectorViewModel: ObservableObject {
     }
     
     func getCountriesData() {
-        var language: String {
-            return Locale.current.languageCode ?? "en"
-        }
-        
-        locationData.getCountries(language: language) { countries in
-            self.allCountries = countries
+        networkService.makeRequest(.vkCountries(token: Tokens.vk, lang: Locale.current), resultType: CountryModel.self) { [weak self] result in
+            guard let `self` = self else { return }
+            switch result {
+            case .success(let data):
+                self.allCountries = data.response.items
+            case .failure(let error):
+                self.alertMessage = error.description
+                self.isAlertPresented = true
+            }
         }
     }
     
